@@ -7,6 +7,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class RankChangeToast implements Toast {
@@ -23,11 +25,11 @@ public class RankChangeToast implements Toast {
 		this.oldUser = oldUser;
 		this.newUser = newUser;
 		this.skull = skull;
-		this.title = Component.translatable("murderleaderboard.toast.title",
-						Component.literal(getShortUser(this.newUser, 12)).withStyle(ChatFormatting.GOLD),
-						Component.literal("#" + this.newRank).withStyle(ChatFormatting.GOLD))
+		this.title = new TranslatableComponent("murderleaderboard.toast.title",
+				new TextComponent(getShortUser(this.newUser, 12)).withStyle(ChatFormatting.GOLD),
+				new TextComponent("#" + this.newRank).withStyle(ChatFormatting.GOLD))
 				.withStyle(ChatFormatting.WHITE);
-		this.subtitle = Component.translatable("murderleaderboard.toast.subtitle", getShortUser(this.oldUser, 12)).withStyle(ChatFormatting.GRAY);
+		this.subtitle = new TranslatableComponent("murderleaderboard.toast.subtitle", getShortUser(this.oldUser, 12)).withStyle(ChatFormatting.GRAY);
 	}
 
 	private String getShortUser(String user, int max) {

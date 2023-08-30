@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class MurderRegistry {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MurderLeaderboard.MOD_ID);
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MurderLeaderboard.MOD_ID);
-	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MurderLeaderboard.MOD_ID);
+	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MurderLeaderboard.MOD_ID);
 
 	public static final RegistryObject<Block> TOP_PLAYER = registerTopPlayer("top_player", () -> new TopPlayerBlock(
 			BlockBehaviour.Properties.of(Material.STONE).sound(SoundType.STONE).strength(0.6F)), new Item.Properties());

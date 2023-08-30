@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWidget.ListEntry> {
@@ -71,8 +72,7 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 			RenderSystem.applyModelViewMatrix();
 			parent.setBlitOffset(200);
 			itemRenderer.blitOffset = 200.0F;
-			var font = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(stack)
-					.getFont(stack, net.minecraftforge.client.extensions.common.IClientItemExtensions.FontContext.ITEM_COUNT);
+			net.minecraft.client.gui.Font font = net.minecraftforge.client.RenderProperties.get(stack).getFont(stack);
 			if (font == null) font = parent.getFontRenderer();
 			itemRenderer.renderAndDecorateItem(stack, x, y);
 			itemRenderer.renderGuiItemDecorations(font, stack, x, y, null);
@@ -101,7 +101,7 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 
 		@Override
 		public Component getNarration() {
-			return Component.translatable("murderleaderboard.leaderboard.narration", getKiller(), getKills());
+			return new TranslatableComponent("murderleaderboard.leaderboard.narration", getKiller(), getKills());
 		}
 	}
 }

@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SyncHandler {
 	@SubscribeEvent
 	public void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-		Player player = event.getEntity();
+		Player player = event.getPlayer();
 		if (!player.getLevel().isClientSide) {
 			MurderData murderData = MurderData.get(player.getServer().getLevel(Level.OVERWORLD));
 			murderData.setDirty();

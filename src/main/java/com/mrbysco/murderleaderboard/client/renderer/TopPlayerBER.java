@@ -17,14 +17,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -33,14 +33,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
-	protected final EntityRenderDispatcher entityRenderDispatcher;
 	private final TopPlayerTileModel model;
 	private final TopPlayerTileModel slimModel;
 
 	public static final ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultSkin();
 
 	public TopPlayerBER(BlockEntityRendererProvider.Context context) {
-		this.entityRenderDispatcher = context.getEntityRenderer();
 		this.model = new TopPlayerTileModel(context.bakeLayer(ClientHandler.TOP_PLAYER), false);
 		this.slimModel = new TopPlayerTileModel(context.bakeLayer(ClientHandler.TOP_PLAYER_SLIM), true);
 	}
@@ -59,13 +57,13 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		if (minecraft.hitResult != null && minecraft.hitResult.getType() == HitResult.Type.BLOCK) {
 			BlockHitResult blockhitresult = (BlockHitResult) minecraft.hitResult;
 			BlockPos blockpos = blockhitresult.getBlockPos();
-			if(blockEntity.getBlockPos().equals(blockpos)) {
+			if (blockEntity.getBlockPos().equals(blockpos)) {
 				String rank = String.format("#%s ", blockEntity.getRank());
-				Component name = profile != null ? Component.literal(rank + profile.getName()) : Component.literal(rank + "Unknown");
+				Component name = profile != null ? new TextComponent(rank + profile.getName()) : new TextComponent(rank + "Unknown");
 				float yOffset = 1.25F;
 				poseStack.pushPose();
 				poseStack.translate(0.0D, (double) yOffset, 0.0D);
-				poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+				poseStack.mulPose(minecraft.getEntityRenderDispatcher().cameraOrientation());
 				poseStack.scale(-0.025F, -0.025F, 0.025F);
 				Matrix4f pose = poseStack.last().pose();
 				float backgroundOpacity = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
@@ -125,7 +123,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 			if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 				return RenderType.entityTranslucent(minecraft.getSkinManager().registerTexture((MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN));
 			} else {
-				return RenderType.entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin(UUIDUtil.getOrCreatePlayerUUID(gameProfileIn)));
+				return RenderType.entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin(Player.createPlayerUUID(gameProfileIn)));
 			}
 		}
 	}

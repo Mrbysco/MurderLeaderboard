@@ -4,13 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrbysco.murderleaderboard.client.screen.widget.NumberFieldBox;
 import com.mrbysco.murderleaderboard.network.PacketHandler;
 import com.mrbysco.murderleaderboard.network.message.ChooseRankMessage;
-import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.network.PacketDistributor;
 
 public class ChooseRankScreen extends Screen {
@@ -20,7 +21,7 @@ public class ChooseRankScreen extends Screen {
 	private NumberFieldBox rankField;
 
 	public ChooseRankScreen(BlockPos pos, int rank) {
-		super(GameNarrator.NO_TITLE);
+		super(NarratorChatListener.NO_TITLE);
 
 		this.position = pos;
 		this.originalRank = rank;
@@ -46,7 +47,7 @@ public class ChooseRankScreen extends Screen {
 			this.minecraft.setScreen((Screen) null);
 		}));
 
-		this.rankField = new NumberFieldBox(this.font, centerWidth - 15, centerHeight - 35, 30, 20, Component.translatable("murderleaderboard.screen.rank_text"));
+		this.rankField = new NumberFieldBox(this.font, centerWidth - 15, centerHeight - 35, 30, 20, new TranslatableComponent("murderleaderboard.screen.rank_text"));
 		this.rankField.setValue(String.valueOf(originalRank));
 		this.rankField.setMaxLength(4);
 		this.addWidget(this.rankField);

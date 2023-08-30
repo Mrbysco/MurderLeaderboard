@@ -5,7 +5,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
-import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.Util;
@@ -15,8 +14,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.Services;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.Nameable;
@@ -53,10 +53,6 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 		profileCache = gameProfileCache;
 		sessionService = service;
 		mainThreadExecutor = executor;
-	}
-
-	public static void setup(Services services, Executor executor) {
-		setup(services.profileCache(), services.sessionService(), executor);
 	}
 
 	public static void clear() {
@@ -111,7 +107,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	}
 
 	@Override
-	public CompoundTag getPersistentData() {
+	public CompoundTag getTileData() {
 		CompoundTag nbt = new CompoundTag();
 		this.saveAdditional(nbt);
 		return nbt;
@@ -194,7 +190,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 
 	@Override
 	public Component getName() {
-		return this.hasCustomName() ? Component.literal(this.playerProfile != null ? playerProfile.getName() : "") : Component.translatable("murderleaderboard.blockentity.top_player");
+		return this.hasCustomName() ? new TextComponent(this.playerProfile != null ? playerProfile.getName() : "") : new TranslatableComponent("murderleaderboard.blockentity.top_player");
 	}
 
 	@Nullable

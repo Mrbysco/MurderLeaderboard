@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.loading.StringUtils;
 
 import java.util.ArrayList;
@@ -33,11 +34,11 @@ public class LeaderboardScreen extends Screen {
 
 	private EditBox search;
 
-	private static final Component murdererText = Component.translatable("murderleaderboard.leaderboard.murderer").withStyle(ChatFormatting.UNDERLINE);
-	private static final Component killCountText = Component.translatable("murderleaderboard.leaderboard.killCount").withStyle(ChatFormatting.UNDERLINE);
+	private static final Component murdererText = new TranslatableComponent("murderleaderboard.leaderboard.murderer").withStyle(ChatFormatting.UNDERLINE);
+	private static final Component killCountText = new TranslatableComponent("murderleaderboard.leaderboard.killCount").withStyle(ChatFormatting.UNDERLINE);
 
 	public LeaderboardScreen() {
-		super(Component.translatable("murderleaderboard.leaderboard.title"));
+		super(new TranslatableComponent("murderleaderboard.leaderboard.title"));
 
 		List<MurderData.KillData> killList = new ArrayList<>();
 		for (MurderData.KillData killData : ClientHandler.killList) {
@@ -66,11 +67,11 @@ public class LeaderboardScreen extends Screen {
 		int closeButtonWidth = Math.min(structureWidth, 200);
 		int y = this.height - 20 - PADDING;
 		this.addRenderableWidget(new Button(centerWidth - (closeButtonWidth / 2) + PADDING, y, closeButtonWidth, 20,
-				Component.translatable("gui.back"), b -> onClose()));
+				new TranslatableComponent("gui.back"), b -> onClose()));
 
 		y -= 14 + PADDING;
 		search = new EditBox(getFontRenderer(), centerWidth - listWidth / 2 + PADDING + 1, y, listWidth - 2, 14,
-				Component.translatable("murderleaderboard.leaderboard.search"));
+				new TranslatableComponent("murderleaderboard.leaderboard.search"));
 
 		int fullButtonHeight = PADDING + 20 + PADDING;
 		this.leaderboardWidget = new LeaderboardListWidget(this, width, fullButtonHeight, search.y - getFontRenderer().lineHeight - PADDING);
@@ -113,7 +114,7 @@ public class LeaderboardScreen extends Screen {
 		drawCenteredString(poseStack, getFontRenderer(), killCountText, this.width / 2 + 100,
 				16, 0xFFFFFF);
 
-		drawCenteredString(poseStack, getFontRenderer(), Component.translatable("murderleaderboard.leaderboard.search"), this.width / 2 + PADDING,
+		drawCenteredString(poseStack, getFontRenderer(), new TranslatableComponent("murderleaderboard.leaderboard.search"), this.width / 2 + PADDING,
 				search.y - getFontRenderer().lineHeight - 2, 0xFFFFFF);
 
 		this.search.render(poseStack, mouseX, mouseY, partialTicks);

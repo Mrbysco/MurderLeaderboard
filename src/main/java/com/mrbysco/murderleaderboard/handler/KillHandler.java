@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.handler;
 
-import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.config.MurderConfig;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.nbt.CompoundTag;

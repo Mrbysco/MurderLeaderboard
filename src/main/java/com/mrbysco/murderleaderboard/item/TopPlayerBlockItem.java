@@ -8,7 +8,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.client.IItemRenderProperties;
 
 import java.util.function.Consumer;
 
@@ -19,15 +19,13 @@ public class TopPlayerBlockItem extends BlockItem {
 	}
 
 	@Override
-	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		consumer.accept(new IClientItemExtensions() {
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(new IItemRenderProperties() {
 			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
 				return new TopPlayerBEWLR(new BlockEntityRendererProvider.Context(
 						Minecraft.getInstance().getBlockEntityRenderDispatcher(),
 						Minecraft.getInstance().getBlockRenderer(),
-						Minecraft.getInstance().getItemRenderer(),
-						Minecraft.getInstance().getEntityRenderDispatcher(),
 						Minecraft.getInstance().getEntityModels(),
 						Minecraft.getInstance().font
 				));

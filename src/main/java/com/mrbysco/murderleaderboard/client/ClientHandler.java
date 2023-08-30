@@ -1,5 +1,8 @@
 package com.mrbysco.murderleaderboard.client;
 
+import com.mojang.authlib.AuthenticationService;
+import com.mojang.authlib.GameProfileRepository;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
@@ -14,14 +17,15 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.Services;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +44,8 @@ public class ClientHandler {
 		setPlayerCache(Minecraft.getInstance());
 	}
 
-	public static void registerKeymapping(final RegisterKeyMappingsEvent event) {
-		event.register(KEY_OPEN_LEADERBOARD);
+	public static void registerKeymapping(final FMLClientSetupEvent event) {
+		ClientRegistry.registerKeyBinding(KEY_OPEN_LEADERBOARD);
 	}
 
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
@@ -54,14 +58,14 @@ public class ClientHandler {
 	}
 
 
-	public static void onLogin(ClientPlayerNetworkEvent.LoggingIn event) {
+	public static void onLogin(ClientPlayerNetworkEvent.LoggedInEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (!mc.isLocalServer()) {
 			setPlayerCache(mc);
 		}
 	}
 
-	public static void onRespawn(ClientPlayerNetworkEvent.Clone event) {
+	public static void onRespawn(ClientPlayerNetworkEvent.RespawnEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (!mc.isLocalServer()) {
 			setPlayerCache(mc);
@@ -69,10 +73,12 @@ public class ClientHandler {
 	}
 
 	private static void setPlayerCache(Minecraft mc) {
-		YggdrasilAuthenticationService authenticationService = new YggdrasilAuthenticationService(mc.getProxy());
-		Services services = Services.create(authenticationService, mc.gameDirectory);
-		services.profileCache().setExecutor(mc);
-		TopPlayerBlockEntity.setup(services, mc);
+		AuthenticationService authenticationService = new YggdrasilAuthenticationService(mc.getProxy());
+		MinecraftSessionService sessionService = authenticationService.createMinecraftSessionService();
+		GameProfileRepository profileRepository = authenticationService.createProfileRepository();
+		GameProfileCache profileCache = new GameProfileCache(profileRepository, new File(mc.gameDirectory, MinecraftServer.USERID_CACHE_FILE.getName()));
+		profileCache.setExecutor(mc);
+		TopPlayerBlockEntity.setup(profileCache, sessionService, mc);
 		GameProfileCache.setUsesAuthentication(false);
 	}
 }
