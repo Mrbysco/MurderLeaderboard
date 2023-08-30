@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[41,)"
+#issueTrackerURL="https://github.com/Mrbysco/MurderLeaderboard/issues" TODO: Setup
+license="MIT"
+
+[[mods]]
+modId="murderleaderboard"
+version="${file.jarVersion}"
+displayName="Murder Leaderboard"
+#displayURL="https://www.curseforge.com/minecraft/mc-mods/murder-leaderboard" TODO: Setup
+authors="Mrbysco, ShyNieke"
+description='''
+Do you have some sneaky subs murdering you? Well now you can keep track of who keeps getting you killed!
+'''
+credits="GenerikB"
+
+[[dependencies.murderleaderboard]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.19,1.20)"
+ordering="NONE"
+side="BOTH"

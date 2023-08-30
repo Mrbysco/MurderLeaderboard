@@ -1,0 +1,13 @@
+{
+  "block.murderleaderboard.top_player": "Leaderboard Block",
+  "murderleaderboard.blockentity.top_player": "Top Player",
+  "murderleaderboard.leaderboard.close": "Close",
+  "murderleaderboard.leaderboard.killCount": "Kill Count",
+  "murderleaderboard.leaderboard.murderer": "Murderer",
+  "murderleaderboard.leaderboard.narration": "%s has murdered you %s times",
+  "murderleaderboard.leaderboard.search": "Search",
+  "murderleaderboard.leaderboard.title": "Murder Leaderboard",
+  "murderleaderboard.screen.rank_text": "Rank",
+  "murderleaderboard.toast.title": "%s takes %s",
+  "murderleaderboard.toast.subtitle": "Dethroning %s"
+}

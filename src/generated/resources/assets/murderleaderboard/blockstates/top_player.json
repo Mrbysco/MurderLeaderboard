@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "murderleaderboard:block/top_player",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "murderleaderboard:block/top_player"
+    },
+    "facing=south": {
+      "model": "murderleaderboard:block/top_player",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "murderleaderboard:block/top_player",
+      "y": 270
+    }
+  }
+}
