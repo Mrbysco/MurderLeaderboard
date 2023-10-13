@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.network.message;
 
-import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.toast.RankChangeToast;
 import com.mrbysco.murderleaderboard.world.MurderData;
