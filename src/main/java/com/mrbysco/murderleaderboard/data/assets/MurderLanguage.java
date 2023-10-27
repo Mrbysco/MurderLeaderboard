@@ -2,12 +2,12 @@ package com.mrbysco.murderleaderboard.data.assets;
 
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class MurderLanguage extends LanguageProvider {
-	public MurderLanguage(DataGenerator gen) {
-		super(gen, MurderLeaderboard.MOD_ID, "en_us");
+	public MurderLanguage(PackOutput packOutput) {
+		super(packOutput, MurderLeaderboard.MOD_ID, "en_us");
 	}
 
 	@Override

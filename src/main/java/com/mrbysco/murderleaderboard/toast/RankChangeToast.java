@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
@@ -38,24 +39,22 @@ public class RankChangeToast implements Toast {
 		return s;
 	}
 
-	public Toast.Visibility render(PoseStack poseStack, ToastComponent component, long time) {
+	public Toast.Visibility render(GuiGraphics guiGraphics, ToastComponent component, long time) {
 		if (this.changed) {
 			this.lastChanged = time;
 			this.changed = false;
 		}
 
-		RenderSystem.setShaderTexture(0, TEXTURE);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		component.blit(poseStack, 0, 0, 0, 0, this.width(), this.height());
+		guiGraphics.blit(TEXTURE, 0, 0, 0, 0, this.width(), this.height());
 		Font font = component.getMinecraft().font;
-		font.draw(poseStack, title, 30.0F, 7.0F, -11534256);
-		font.draw(poseStack, subtitle, 30.0F, 18.0F, -16777216);
+		guiGraphics.drawString(font, title, 30, 7, -11534256, false);
+		guiGraphics.drawString(font, subtitle, 30, 18, -16777216, false);
 		PoseStack posestack = RenderSystem.getModelViewStack();
 		posestack.pushPose();
 		posestack.translate(2.5D, 5D, 0);
 		posestack.scale(1.0F, 1.0F, 1.0F);
 		RenderSystem.applyModelViewMatrix();
-		component.getMinecraft().getItemRenderer().renderAndDecorateFakeItem(skull, 3, 3);
+		guiGraphics.renderFakeItem(skull, 3, 3);
 		posestack.popPose();
 
 		return time - this.lastChanged < 5000L ? Toast.Visibility.SHOW : Toast.Visibility.HIDE;

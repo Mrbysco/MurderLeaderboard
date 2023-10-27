@@ -1,44 +1,41 @@
 package com.mrbysco.murderleaderboard.data.data;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Set;
 
 public class MurderLootProvider extends LootTableProvider {
-	public MurderLootProvider(DataGenerator gen) {
-		super(gen);
-	}
-
-	@Override
-	protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-		return ImmutableList.of(Pair.of(MurderBlocks::new, LootContextParamSets.BLOCK));
+	public MurderLootProvider(PackOutput packOutput) {
+		super(packOutput, Set.of(), List.of(
+				new SubProviderEntry(MurderBlocks::new, LootContextParamSets.BLOCK)
+		));
 	}
 
 	@Override
 	protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker) {
-		map.forEach((name, table) -> LootTables.validate(validationtracker, name, table));
+		map.forEach((name, table) -> table.validate(validationtracker));
 	}
 
-	private static class MurderBlocks extends BlockLoot {
+	private static class MurderBlocks extends BlockLootSubProvider {
+
+		protected MurderBlocks() {
+			super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+		}
+
 		@Override
-		protected void addTables() {
+		protected void generate() {
 			this.add(MurderRegistry.TOP_PLAYER.get(), createNameableBlockEntityTable(MurderRegistry.TOP_PLAYER.get()));
 		}
 

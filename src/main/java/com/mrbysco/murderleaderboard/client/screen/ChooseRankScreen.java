@@ -1,11 +1,11 @@
 package com.mrbysco.murderleaderboard.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrbysco.murderleaderboard.client.screen.widget.NumberFieldBox;
 import com.mrbysco.murderleaderboard.network.PacketHandler;
 import com.mrbysco.murderleaderboard.network.message.ChooseRankMessage;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -37,14 +37,13 @@ public class ChooseRankScreen extends Screen {
 		int centerWidth = (this.width) / 2;
 		int centerHeight = (this.height) / 2;
 
-		this.addRenderableWidget(new Button(centerWidth - 65, centerHeight, 60, 20, CommonComponents.GUI_CANCEL, (p_238847_1_) -> {
-			this.minecraft.setScreen((Screen) null);
-		}));
+		this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, b -> this.minecraft.setScreen((Screen) null))
+				.bounds(centerWidth - 65, centerHeight, 60, 20).build());
 
-		this.addRenderableWidget(new Button(centerWidth + 5, centerHeight, 60, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> {
+		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, b -> {
 			updateBlock();
 			this.minecraft.setScreen((Screen) null);
-		}));
+		}).bounds(centerWidth + 5, centerHeight, 60, 20).build());
 
 		this.rankField = new NumberFieldBox(this.font, centerWidth - 15, centerHeight - 35, 30, 20, Component.translatable("murderleaderboard.screen.rank_text"));
 		this.rankField.setValue(String.valueOf(originalRank));
@@ -53,18 +52,18 @@ public class ChooseRankScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(poseStack);
+	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(guiGraphics);
 
-		this.rankField.render(poseStack, mouseX, mouseY, partialTicks);
+		this.rankField.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		int centerWidth = (this.width) / 2;
 		int centerHeight = (this.height) / 2;
 		String title = "Choose Rank";
 
-		this.font.draw(poseStack, title, centerWidth - (this.font.width(title) / 2), centerHeight - 70, 16777215);
+		guiGraphics.drawString(font, title, centerWidth - (this.font.width(title) / 2), centerHeight - 70, 16777215, false);
 
-		super.render(poseStack, mouseX, mouseY, partialTicks);
+		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

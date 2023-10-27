@@ -1,6 +1,8 @@
 {
   "pack": {
-    "description": "Murder Leaderboard resources",
+    "description": {
+      "text": "Murder Leaderboard resources"
+    },
     "pack_format": 15
   }
 }

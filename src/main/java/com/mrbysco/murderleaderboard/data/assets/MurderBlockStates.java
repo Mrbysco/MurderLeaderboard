@@ -3,7 +3,7 @@ package com.mrbysco.murderleaderboard.data.assets;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.core.Direction;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -13,8 +13,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class MurderBlockStates extends BlockStateProvider {
 
-	public MurderBlockStates(DataGenerator gen, ExistingFileHelper helper) {
-		super(gen, MurderLeaderboard.MOD_ID, helper);
+	public MurderBlockStates(PackOutput packOutput, ExistingFileHelper helper) {
+		super(packOutput, MurderLeaderboard.MOD_ID, helper);
 	}
 
 	@Override

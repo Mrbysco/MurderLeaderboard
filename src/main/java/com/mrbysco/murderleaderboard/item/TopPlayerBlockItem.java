@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class TopPlayerBlockItem extends BlockItem {
 
 	public TopPlayerBlockItem(Block blockIn, Item.Properties builder) {
-		super(blockIn, builder.tab(CreativeModeTab.TAB_MISC));
+		super(blockIn, builder);
 	}
 
 	@Override

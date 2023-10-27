@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -22,7 +22,7 @@ public class MurderRegistry {
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MurderLeaderboard.MOD_ID);
 
 	public static final RegistryObject<Block> TOP_PLAYER = registerTopPlayer("top_player", () -> new TopPlayerBlock(
-			BlockBehaviour.Properties.of(Material.STONE).sound(SoundType.STONE).strength(0.6F)), new Item.Properties());
+			BlockBehaviour.Properties.of().mapColor(MapColor.STONE).sound(SoundType.STONE).strength(0.6F)), new Item.Properties());
 
 	public static <B extends Block> RegistryObject<B> registerTopPlayer(String name, Supplier<? extends B> supplier, Item.Properties properties) {
 		RegistryObject<B> block = MurderRegistry.BLOCKS.register(name, supplier);

@@ -1,11 +1,8 @@
 package com.mrbysco.murderleaderboard.handler;
 
-import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.config.MurderConfig;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.CombatTracker;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -18,12 +15,9 @@ public class KillHandler {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof Player player) {
-			CombatTracker tracker = player.getCombatTracker();
-			DamageSource source = event.getSource();
-			if (source.getEntity() instanceof LivingEntity killer) {
-				countDeath(player, killer);
-			} else if (tracker.getKiller() != null) {
-				countDeath(player, tracker.getKiller());
+			LivingEntity credit = player.getKillCredit();
+			if (credit != null) {
+				countDeath(player, credit);
 			}
 		}
 	}
@@ -34,7 +28,7 @@ public class KillHandler {
 
 		String killerName = persistentData.getString(MurderConfig.COMMON.nameKey.get());
 		if (!killerName.isEmpty()) {
-			Level level = player.getLevel();
+			Level level = player.level();
 			MurderData data = MurderData.get(level);
 			data.addKill(player.getGameProfile().getName(), killerName);
 		}

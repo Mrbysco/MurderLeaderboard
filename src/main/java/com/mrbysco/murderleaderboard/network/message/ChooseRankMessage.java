@@ -35,7 +35,7 @@ public class ChooseRankMessage {
 		NetworkEvent.Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			if (ctx.getDirection().getReceptionSide().isServer()) {
-				final ServerLevel serverLevel = ctx.getSender().getLevel();
+				final ServerLevel serverLevel = ctx.getSender().serverLevel();
 				if (serverLevel.getBlockEntity(this.pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 					topPlayerBlockEntity.setRank(rank);
 					topPlayerBlockEntity.updateTierProfile();

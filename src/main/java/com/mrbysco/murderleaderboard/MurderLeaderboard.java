@@ -12,8 +12,10 @@ import com.mrbysco.murderleaderboard.network.PacketHandler;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -40,6 +42,7 @@ public class MurderLeaderboard {
 		MurderRegistry.BLOCK_ENTITIES.register(eventBus);
 
 		eventBus.addListener(this::commonSetup);
+		eventBus.addListener(this::addTabContents);
 		MinecraftForge.EVENT_BUS.addListener(this::serverAboutToStart);
 
 		MinecraftForge.EVENT_BUS.register(new KillHandler());
@@ -59,6 +62,12 @@ public class MurderLeaderboard {
 
 	public void commonSetup(FMLCommonSetupEvent event) {
 		PacketHandler.init();
+	}
+
+	private void addTabContents(final BuildCreativeModeTabContentsEvent event) {
+		if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+			event.accept(MurderRegistry.TOP_PLAYER.get());
+		}
 	}
 
 	public void onCommandRegister(RegisterCommandsEvent event) {

@@ -1,12 +1,11 @@
 package com.mrbysco.murderleaderboard.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,8 +36,8 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 	}
 
 	@Override
-	protected void renderBackground(PoseStack mStack) {
-		this.parent.renderBackground(mStack);
+	protected void renderBackground(GuiGraphics guiGraphics) {
+		this.parent.renderBackground(guiGraphics);
 	}
 
 	public class ListEntry extends ObjectSelectionList.Entry<ListEntry> {
@@ -51,33 +50,25 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 		}
 
 		@Override
-		public void render(PoseStack poseStack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+		public void render(GuiGraphics guiGraphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
 			String killer = killData.name();
 			String killCount = String.valueOf(killData.kills());
 
 			Font font = this.parent.getFontRenderer();
-			font.draw(poseStack, killer, (this.parent.width / 2) - 80, top + 6, 0xFFFFFF);
-			font.draw(poseStack, killCount, (this.parent.width / 2) + 100 - (font.width(killCount) / 2), top + 6, 0xFFFFFF);
+			guiGraphics.drawWordWrap(font, Component.literal(killer), (this.parent.width / 2) - 80, top + 6, 160, 0xFFFFFF);
+			guiGraphics.drawString(font, killCount, (this.parent.width / 2) + 100 - (font.width(killCount) / 2), top + 6, 0xFFFFFF, false);
 
-			renderFloatingItem(getSkull(), (this.parent.width / 2) - 106, top + 1);
+			renderFloatingItem(guiGraphics, getSkull(), (this.parent.width / 2) - 106, top + 1);
 		}
 
-		private void renderFloatingItem(ItemStack stack, int x, int y) {
+		private void renderFloatingItem(GuiGraphics guiGraphics, ItemStack stack, int x, int y) {
 			Minecraft mc = parent.getMinecraft();
-			ItemRenderer itemRenderer = mc.getItemRenderer();
-
-			PoseStack posestack = RenderSystem.getModelViewStack();
-			posestack.translate(0.0D, 0.0D, 32.0D);
-			RenderSystem.applyModelViewMatrix();
-			parent.setBlitOffset(200);
-			itemRenderer.blitOffset = 200.0F;
-			var font = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(stack)
-					.getFont(stack, net.minecraftforge.client.extensions.common.IClientItemExtensions.FontContext.ITEM_COUNT);
-			if (font == null) font = parent.getFontRenderer();
-			itemRenderer.renderAndDecorateItem(stack, x, y);
-			itemRenderer.renderGuiItemDecorations(font, stack, x, y, null);
-			parent.setBlitOffset(0);
-			itemRenderer.blitOffset = 0.0F;
+			guiGraphics.pose().pushPose();
+			guiGraphics.pose().translate(0.0F, 0.0F, 232.0F);
+			guiGraphics.renderItem(stack, x, y);
+			var font = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(stack).getFont(stack, net.minecraftforge.client.extensions.common.IClientItemExtensions.FontContext.ITEM_COUNT);
+			guiGraphics.renderItemDecorations(font == null ? mc.font : font, stack, x, y, null);
+			guiGraphics.pose().popPose();
 		}
 
 		@Override

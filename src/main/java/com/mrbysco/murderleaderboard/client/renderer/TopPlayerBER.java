@@ -4,8 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.mrbysco.murderleaderboard.block.TopPlayerBlock;
 import com.mrbysco.murderleaderboard.blockentity.TopPlayerBlockEntity;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.Map;
 
@@ -59,7 +59,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		if (minecraft.hitResult != null && minecraft.hitResult.getType() == HitResult.Type.BLOCK) {
 			BlockHitResult blockhitresult = (BlockHitResult) minecraft.hitResult;
 			BlockPos blockpos = blockhitresult.getBlockPos();
-			if(blockEntity.getBlockPos().equals(blockpos)) {
+			if (blockEntity.getBlockPos().equals(blockpos)) {
 				String rank = String.format("#%s ", blockEntity.getRank());
 				Component name = profile != null ? Component.literal(rank + profile.getName()) : Component.literal(rank + "Unknown");
 				float yOffset = 1.25F;
@@ -72,8 +72,8 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 				int j = (int) (backgroundOpacity * 255.0F) << 24;
 				Font font = minecraft.font;
 				float halfWidth = (float) (-font.width(name) / 2);
-				font.drawInBatch(name, halfWidth, (float) 0, 553648127, false, pose, bufferSource, flag, j, combinedLightIn);
-				font.drawInBatch(name, halfWidth, (float) 0, -1, false, pose, bufferSource, false, 0, combinedLightIn);
+				font.drawInBatch(name, halfWidth, (float) 0, 553648127, false, pose, bufferSource, flag ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, j, combinedLightIn);
+				font.drawInBatch(name, halfWidth, (float) 0, -1, false, pose, bufferSource, Font.DisplayMode.NORMAL, 0, combinedLightIn);
 
 				poseStack.popPose();
 			}
@@ -88,13 +88,13 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 				case NORTH:
 					break;
 				case SOUTH:
-					poseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+					poseStack.mulPose(Axis.YP.rotationDegrees(180));
 					break;
 				case WEST:
-					poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+					poseStack.mulPose(Axis.YP.rotationDegrees(90));
 					break;
 				default:
-					poseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+					poseStack.mulPose(Axis.YP.rotationDegrees(270));
 			}
 		}
 		poseStack.scale(-1.0F, -1.0F, 1.0F);
@@ -104,7 +104,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 			final String s = ChatFormatting.stripFormatting(profile.getName());
 			if ("Dinnerbone".equalsIgnoreCase(s) || "Grumm".equalsIgnoreCase(s)) {
 				poseStack.translate(0.0D, (double) (1.85F), 0.0D);
-				poseStack.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+				poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 			}
 		}
 
