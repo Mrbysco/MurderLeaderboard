@@ -3,7 +3,7 @@ package com.mrbysco.murderleaderboard.data.assets;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class MurderLanguage extends LanguageProvider {
 	public MurderLanguage(PackOutput packOutput) {

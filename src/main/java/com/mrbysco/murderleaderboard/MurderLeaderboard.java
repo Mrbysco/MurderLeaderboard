@@ -13,18 +13,17 @@ import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import org.slf4j.Logger;
 
 @Mod(MurderLeaderboard.MOD_ID)
@@ -43,21 +42,21 @@ public class MurderLeaderboard {
 
 		eventBus.addListener(this::commonSetup);
 		eventBus.addListener(this::addTabContents);
-		MinecraftForge.EVENT_BUS.addListener(this::serverAboutToStart);
+		NeoForge.EVENT_BUS.addListener(this::serverAboutToStart);
 
-		MinecraftForge.EVENT_BUS.register(new KillHandler());
-		MinecraftForge.EVENT_BUS.register(new SyncHandler());
-		MinecraftForge.EVENT_BUS.addListener(this::onCommandRegister);
+		NeoForge.EVENT_BUS.register(new KillHandler());
+		NeoForge.EVENT_BUS.register(new SyncHandler());
+		NeoForge.EVENT_BUS.addListener(this::onCommandRegister);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		if (FMLEnvironment.dist.isClient()) {
 			eventBus.addListener(ClientHandler::doClientStuff);
 			eventBus.addListener(ClientHandler::registerKeymapping);
 			eventBus.addListener(ClientHandler::registerEntityRenders);
 			eventBus.addListener(ClientHandler::registerLayerDefinitions);
-			MinecraftForge.EVENT_BUS.addListener(KeybindHandler::onClientTick);
-			MinecraftForge.EVENT_BUS.addListener(ClientHandler::onLogin);
-			MinecraftForge.EVENT_BUS.addListener(ClientHandler::onRespawn);
-		});
+			NeoForge.EVENT_BUS.addListener(KeybindHandler::onClientTick);
+			NeoForge.EVENT_BUS.addListener(ClientHandler::onLogin);
+			NeoForge.EVENT_BUS.addListener(ClientHandler::onRespawn);
+		}
 	}
 
 	public void commonSetup(FMLCommonSetupEvent event) {

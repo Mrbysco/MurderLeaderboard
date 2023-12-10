@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -8,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWidget.ListEntry> {
 	private final LeaderboardScreen parent;
@@ -33,11 +33,6 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 	public void refreshList() {
 		this.clearEntries();
 		parent.buildLeaderboard(this::addEntry, location -> new ListEntry(location, this.parent));
-	}
-
-	@Override
-	protected void renderBackground(GuiGraphics guiGraphics) {
-		this.parent.renderBackground(guiGraphics);
 	}
 
 	public class ListEntry extends ObjectSelectionList.Entry<ListEntry> {
@@ -66,7 +61,7 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 			guiGraphics.pose().pushPose();
 			guiGraphics.pose().translate(0.0F, 0.0F, 232.0F);
 			guiGraphics.renderItem(stack, x, y);
-			var font = net.minecraftforge.client.extensions.common.IClientItemExtensions.of(stack).getFont(stack, net.minecraftforge.client.extensions.common.IClientItemExtensions.FontContext.ITEM_COUNT);
+			var font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
 			guiGraphics.renderItemDecorations(font == null ? mc.font : font, stack, x, y, null);
 			guiGraphics.pose().popPose();
 		}

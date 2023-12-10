@@ -8,6 +8,6 @@
   "murderleaderboard.leaderboard.search": "Search",
   "murderleaderboard.leaderboard.title": "Murder Leaderboard",
   "murderleaderboard.screen.rank_text": "Rank",
-  "murderleaderboard.toast.title": "%s takes %s",
-  "murderleaderboard.toast.subtitle": "Dethroning %s"
+  "murderleaderboard.toast.subtitle": "Dethroning %s",
+  "murderleaderboard.toast.title": "%s takes %s"
 }

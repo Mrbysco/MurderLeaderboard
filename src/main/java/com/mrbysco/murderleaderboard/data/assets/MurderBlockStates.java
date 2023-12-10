@@ -1,15 +1,15 @@
 package com.mrbysco.murderleaderboard.data.assets;
 
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
+import com.mrbysco.murderleaderboard.block.TopPlayerBlock;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 public class MurderBlockStates extends BlockStateProvider {
 
@@ -22,9 +22,9 @@ public class MurderBlockStates extends BlockStateProvider {
 		makeFacingBlock(MurderRegistry.TOP_PLAYER);
 	}
 
-	private void makeFacingBlock(RegistryObject<Block> registryObject) {
-		ModelFile model = models().getExistingFile(modLoc("block/" + registryObject.getId().getPath()));
-		getVariantBuilder(registryObject.get())
+	private void makeFacingBlock(DeferredBlock<TopPlayerBlock> deferredBlock) {
+		ModelFile model = models().getExistingFile(modLoc("block/" + deferredBlock.getId().getPath()));
+		getVariantBuilder(deferredBlock.get())
 				.partialState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)
 				.modelForState().modelFile(model).addModel()
 				.partialState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST)

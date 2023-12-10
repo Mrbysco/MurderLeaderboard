@@ -8,9 +8,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class RankChangeToast implements Toast {
+	private static final ResourceLocation BACKGROUND_SPRITE = new ResourceLocation("toast/advancement");
 	private final int newRank;
 	private final String oldUser, newUser;
 	private final ItemStack skull;
@@ -45,7 +47,7 @@ public class RankChangeToast implements Toast {
 			this.changed = false;
 		}
 
-		guiGraphics.blit(TEXTURE, 0, 0, 0, 0, this.width(), this.height());
+		guiGraphics.blitSprite(BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		Font font = component.getMinecraft().font;
 		guiGraphics.drawString(font, title, 30, 7, -11534256, false);
 		guiGraphics.drawString(font, subtitle, 30, 18, -16777216, false);

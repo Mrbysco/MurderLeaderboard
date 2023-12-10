@@ -11,7 +11,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.fml.loading.StringUtils;
+import net.neoforged.fml.loading.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,7 +84,6 @@ public class LeaderboardScreen extends Screen {
 
 	@Override
 	public void tick() {
-		search.tick();
 		leaderboardWidget.setSelected(selected);
 
 		if (!search.getValue().equals(lastFilterText)) {
@@ -106,6 +105,8 @@ public class LeaderboardScreen extends Screen {
 
 	@Override
 	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+
 		this.leaderboardWidget.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		guiGraphics.drawCenteredString(font, murdererText, this.width / 2 - 56,
@@ -117,8 +118,11 @@ public class LeaderboardScreen extends Screen {
 				search.getY() - getFontRenderer().lineHeight - 2, 0xFFFFFF);
 
 		this.search.render(guiGraphics, mouseX, mouseY, partialTicks);
+	}
 
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+	@Override
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderDirtBackground(guiGraphics);
 	}
 
 	public Font getFontRenderer() {

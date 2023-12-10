@@ -7,13 +7,14 @@ import com.mojang.math.Axis;
 import com.mrbysco.murderleaderboard.blockentity.TopPlayerBlockEntity;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.client.model.TopPlayerTileModel;
-import com.mrbysco.murderleaderboard.util.SkinUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -23,11 +24,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 	private final TopPlayerTileModel model;
 	private final TopPlayerTileModel slimModel;
+	public static boolean isSlim = false;
 
 	public TopPlayerBEWLR(BlockEntityRendererProvider.Context context) {
 		super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
@@ -66,12 +67,13 @@ public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 								gameprofile = foundProfile;
 							}
 						} else if (compoundtag.contains("PlayerProfile", 8) && !StringUtils.isBlank(compoundtag.getString("PlayerProfile"))) {
-							GameProfile gameprofile1 = new GameProfile((UUID) null, compoundtag.getString("PlayerProfile"));
+							String playerProfile = compoundtag.getString("PlayerProfile");
 							compoundtag.remove("PlayerProfile");
-							TopPlayerBlockEntity.updateGameprofile(gameprofile1, (profile) -> {
-								compoundtag.put("PlayerProfile", NbtUtils.writeGameProfile(new CompoundTag(), profile));
-								if (profile != null) {
-									GAMEPROFILE_CACHE.put(profile.getName().toLowerCase(), profile);
+
+							TopPlayerBlockEntity.fetchGameProfile(playerProfile).thenAccept((profile) -> {
+								if (profile.isPresent()) {
+									GameProfile profile1 = profile.orElse(new GameProfile(Util.NIL_UUID, playerProfile));
+									GAMEPROFILE_CACHE.put(profile1.getName().toLowerCase(), profile1);
 								}
 							});
 							gameprofile = GAMEPROFILE_CACHE.get(stackName);
@@ -79,10 +81,10 @@ public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 					}
 
 					if (gameprofile == null) {
-						GameProfile gameprofile1 = new GameProfile((UUID) null, stackName);
-						TopPlayerBlockEntity.updateGameprofile(gameprofile1, (profile) -> {
-							if (profile != null) {
-								GAMEPROFILE_CACHE.put(profile.getName().toLowerCase(), profile);
+						TopPlayerBlockEntity.fetchGameProfile(stackName).thenAccept((profile) -> {
+							if (profile.isPresent()) {
+								GameProfile profile1 = profile.orElse(new GameProfile(Util.NIL_UUID, stackName));
+								GAMEPROFILE_CACHE.put(profile1.getName().toLowerCase(), profile1);
 							}
 						});
 					}
@@ -91,10 +93,10 @@ public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 						gameprofile = GAMEPROFILE_CACHE.get("steve");
 
 					if (gameprofile == null) {
-						GameProfile gameprofile1 = new GameProfile((UUID) null, "steve");
-						TopPlayerBlockEntity.updateGameprofile(gameprofile1, (profile) -> {
-							if (profile != null) {
-								GAMEPROFILE_CACHE.put(profile.getName(), profile);
+						TopPlayerBlockEntity.fetchGameProfile("steve").thenAccept((profile) -> {
+							if (profile.isPresent()) {
+								GameProfile profile1 = profile.orElse(new GameProfile(Util.NIL_UUID, "steve"));
+								GAMEPROFILE_CACHE.put(profile1.getName().toLowerCase(), profile1);
 							}
 						});
 					}
@@ -109,7 +111,10 @@ public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 	}
 
 	public void renderItem(GameProfile gameprofile, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight) {
-		boolean flag = gameprofile != null && gameprofile.isComplete() && SkinUtil.isSlimSkin(gameprofile.getId());
+		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
+		if (gameprofile != null && isSlim != skinmanager.getInsecureSkin(gameprofile).model().id().equals("slim"))
+			isSlim = !isSlim;
+
 		VertexConsumer vertexConsumer = bufferSource.getBuffer(TopPlayerBER.getRenderType(gameprofile));
 		if (gameprofile != null) {
 			final String s = ChatFormatting.stripFormatting(gameprofile.getName());
@@ -119,7 +124,7 @@ public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 			}
 		}
 
-		if (flag) {
+		if (isSlim) {
 			if (slimModel != null) {
 				slimModel.renderToBuffer(poseStack, vertexConsumer, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 			}

@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ChooseRankScreen extends Screen {
 	private final BlockPos position;
@@ -53,7 +53,7 @@ public class ChooseRankScreen extends Screen {
 
 	@Override
 	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(guiGraphics);
+		this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
 		this.rankField.render(guiGraphics, mouseX, mouseY, partialTicks);
 
@@ -69,7 +69,6 @@ public class ChooseRankScreen extends Screen {
 	@Override
 	public void tick() {
 		super.tick();
-		this.rankField.tick();
 	}
 
 	@Override

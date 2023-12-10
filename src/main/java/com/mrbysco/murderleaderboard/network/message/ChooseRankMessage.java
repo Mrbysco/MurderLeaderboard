@@ -4,9 +4,7 @@ import com.mrbysco.murderleaderboard.blockentity.TopPlayerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class ChooseRankMessage {
 	private final BlockPos pos;
@@ -31,8 +29,7 @@ public class ChooseRankMessage {
 		return new ChooseRankMessage(packetBuffer.readBlockPos(), packetBuffer.readInt());
 	}
 
-	public void handle(Supplier<NetworkEvent.Context> context) {
-		NetworkEvent.Context ctx = context.get();
+	public void handle(NetworkEvent.Context ctx) {
 		ctx.enqueueWork(() -> {
 			if (ctx.getDirection().getReceptionSide().isServer()) {
 				final ServerLevel serverLevel = ctx.getSender().serverLevel();

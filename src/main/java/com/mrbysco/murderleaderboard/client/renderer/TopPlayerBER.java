@@ -1,7 +1,6 @@
 package com.mrbysco.murderleaderboard.client.renderer;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -19,9 +18,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,14 +29,13 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-import java.util.Map;
-
 public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 	protected final EntityRenderDispatcher entityRenderDispatcher;
 	private final TopPlayerTileModel model;
 	private final TopPlayerTileModel slimModel;
+	public static boolean isSlim = false;
 
-	public static final ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultSkin();
+	public static final ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultTexture();
 
 	public TopPlayerBER(BlockEntityRendererProvider.Context context) {
 		this.entityRenderDispatcher = context.getEntityRenderer();
@@ -52,7 +50,13 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		Direction direction = flag ? blockstate.getValue(TopPlayerBlock.FACING) : Direction.UP;
 		GameProfile profile = blockEntity.getPlayerProfile();
 
-		render(direction, profile, blockEntity.isSlim(), poseStack, bufferSource, combinedLightIn, partialTicks);
+		if (profile != null) {
+			SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
+			if (isSlim != skinmanager.getInsecureSkin(profile).model().id().equals("slim"))
+				isSlim = !isSlim;
+		}
+
+		render(direction, profile, poseStack, bufferSource, combinedLightIn, partialTicks);
 
 		//Only render when the block is being looked at
 		final Minecraft minecraft = Minecraft.getInstance();
@@ -80,7 +84,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		}
 	}
 
-	public void render(@Nullable Direction direction, @Nullable GameProfile profile, boolean isSlim, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, float partialTicks) {
+	public void render(@Nullable Direction direction, @Nullable GameProfile profile, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, float partialTicks) {
 		poseStack.translate(0.5D, 0.25D, 0.5D);
 		poseStack.pushPose();
 		if (direction != null) {
@@ -116,17 +120,10 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		poseStack.popPose();
 	}
 
-	public static RenderType getRenderType(@Nullable GameProfile gameProfileIn) {
-		if (gameProfileIn == null || !gameProfileIn.isComplete()) {
-			return RenderType.entityCutoutNoCull(defaultTexture);
-		} else {
-			final Minecraft minecraft = Minecraft.getInstance();
-			final Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfileIn);
-			if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-				return RenderType.entityTranslucent(minecraft.getSkinManager().registerTexture((MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN));
-			} else {
-				return RenderType.entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin(UUIDUtil.getOrCreatePlayerUUID(gameProfileIn)));
-			}
-		}
+	public static RenderType getRenderType(@Nullable GameProfile gameProfile) {
+		if (gameProfile == null)
+			return RenderType.entityTranslucent(defaultTexture);
+		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
+		return RenderType.entityTranslucent(skinmanager.getInsecureSkin(gameProfile).texture());
 	}
 }

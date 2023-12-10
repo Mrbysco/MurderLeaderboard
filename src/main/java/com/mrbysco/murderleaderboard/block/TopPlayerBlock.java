@@ -38,7 +38,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -88,7 +88,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public ItemStack pickupBlock(LevelAccessor level, BlockPos pos, BlockState state) {
+	public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state) {
 		return new ItemStack(state.getBlock());
 	}
 
