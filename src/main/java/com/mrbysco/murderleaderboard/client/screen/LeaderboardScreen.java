@@ -74,7 +74,7 @@ public class LeaderboardScreen extends Screen {
 
 		int fullButtonHeight = PADDING + 20 + PADDING;
 		this.leaderboardWidget = new LeaderboardListWidget(this, width, fullButtonHeight, search.getY() - getFontRenderer().lineHeight - PADDING);
-		this.leaderboardWidget.setLeftPos(0);
+		this.leaderboardWidget.setX(0);
 
 		addWidget(search);
 		addWidget(leaderboardWidget);

@@ -1,7 +1,6 @@
 package com.mrbysco.murderleaderboard.world;
 
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
-import com.mrbysco.murderleaderboard.network.PacketHandler;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -97,7 +96,7 @@ public class MurderData extends SavedData {
 		Set<String> users = userKillMap.keySet();
 		for (String user : users) {
 			CompoundTag saveTag = saveMap(new CompoundTag(), MurderData.userKillMap.getOrDefault(user, new HashMap<>()));
-			PacketHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncKillsMessage(user, killer, saveTag));
+			PacketDistributor.ALL.noArg().send(new SyncKillsMessage(user, killer, saveTag));
 		}
 	}
 

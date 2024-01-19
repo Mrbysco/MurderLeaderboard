@@ -1,25 +1,20 @@
 package com.mrbysco.murderleaderboard.network;
 
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
-import com.mrbysco.murderleaderboard.network.message.ChooseRankMessage;
+import com.mrbysco.murderleaderboard.network.handler.ClientPayloadHandler;
+import com.mrbysco.murderleaderboard.network.handler.ServerPayloadHandler;
+import com.mrbysco.murderleaderboard.network.message.ChooseRankPayload;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkRegistry;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
 public class PacketHandler {
-	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-			new ResourceLocation(MurderLeaderboard.MOD_ID, "main"),
-			() -> PROTOCOL_VERSION,
-			PROTOCOL_VERSION::equals,
-			PROTOCOL_VERSION::equals
-	);
+	public static void setupPackets(final RegisterPayloadHandlerEvent event) {
+		final IPayloadRegistrar registrar = event.registrar(MurderLeaderboard.MOD_ID);
 
-	private static int id = 0;
-
-	public static void init() {
-		CHANNEL.registerMessage(id++, SyncKillsMessage.class, SyncKillsMessage::encode, SyncKillsMessage::decode, SyncKillsMessage::handle);
-		CHANNEL.registerMessage(id++, ChooseRankMessage.class, ChooseRankMessage::encode, ChooseRankMessage::decode, ChooseRankMessage::handle);
+		registrar.play(SyncKillsMessage.ID, SyncKillsMessage::new, handler -> handler
+				.client(ClientPayloadHandler.getInstance()::handleSyncData));
+		registrar.play(ChooseRankPayload.ID, ChooseRankPayload::new, handler -> handler
+				.server(ServerPayloadHandler.getInstance()::handleRankData));
 	}
 }

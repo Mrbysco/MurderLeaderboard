@@ -7,6 +7,8 @@
   "murderleaderboard.leaderboard.narration": "%s has murdered you %s times",
   "murderleaderboard.leaderboard.search": "Search",
   "murderleaderboard.leaderboard.title": "Murder Leaderboard",
+  "murderleaderboard.networking.choose_rank.failed": "Failed to choose rank %s",
+  "murderleaderboard.networking.sync_kills.failed": "Failed to sync kills %s",
   "murderleaderboard.screen.rank_text": "Rank",
   "murderleaderboard.toast.subtitle": "Dethroning %s",
   "murderleaderboard.toast.title": "%s takes %s"

@@ -1,8 +1,7 @@
 package com.mrbysco.murderleaderboard.client.screen;
 
 import com.mrbysco.murderleaderboard.client.screen.widget.NumberFieldBox;
-import com.mrbysco.murderleaderboard.network.PacketHandler;
-import com.mrbysco.murderleaderboard.network.message.ChooseRankMessage;
+import com.mrbysco.murderleaderboard.network.message.ChooseRankPayload;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -78,6 +77,6 @@ public class ChooseRankScreen extends Screen {
 
 	private void updateBlock() {
 		int rank = rankField.getInt();
-		PacketHandler.CHANNEL.send(PacketDistributor.SERVER.noArg(), new ChooseRankMessage(position, rank));
+		PacketDistributor.SERVER.noArg().send(new ChooseRankPayload(position, rank));
 	}
 }

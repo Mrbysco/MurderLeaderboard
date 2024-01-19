@@ -1,5 +1,6 @@
 package com.mrbysco.murderleaderboard.block;
 
+import com.mojang.serialization.MapCodec;
 import com.mrbysco.murderleaderboard.blockentity.TopPlayerBlockEntity;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.core.BlockPos;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -44,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+	public static final MapCodec<TopPlayerBlock> CODEC = simpleCodec(TopPlayerBlock::new);
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -52,6 +55,11 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	public TopPlayerBlock(BlockBehaviour.Properties builder) {
 		super(builder);
 		this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, Boolean.FALSE));
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
 	}
 
 	@Nullable
@@ -93,7 +101,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 		return super.getCloneItemStack(state, target, level, pos, player);
 	}
 

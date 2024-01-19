@@ -17,8 +17,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -31,8 +29,7 @@ public class MurderLeaderboard {
 	public static final String MOD_ID = "murderleaderboard";
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public MurderLeaderboard() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public MurderLeaderboard(IEventBus eventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MurderConfig.commonSpec);
 		eventBus.register(MurderConfig.class);
 
@@ -40,7 +37,7 @@ public class MurderLeaderboard {
 		MurderRegistry.ITEMS.register(eventBus);
 		MurderRegistry.BLOCK_ENTITIES.register(eventBus);
 
-		eventBus.addListener(this::commonSetup);
+		eventBus.addListener(PacketHandler::setupPackets);
 		eventBus.addListener(this::addTabContents);
 		NeoForge.EVENT_BUS.addListener(this::serverAboutToStart);
 
@@ -57,10 +54,6 @@ public class MurderLeaderboard {
 			NeoForge.EVENT_BUS.addListener(ClientHandler::onLogin);
 			NeoForge.EVENT_BUS.addListener(ClientHandler::onRespawn);
 		}
-	}
-
-	public void commonSetup(FMLCommonSetupEvent event) {
-		PacketHandler.init();
 	}
 
 	private void addTabContents(final BuildCreativeModeTabContentsEvent event) {

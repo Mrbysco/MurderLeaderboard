@@ -24,5 +24,8 @@ public class MurderLanguage extends LanguageProvider {
 		add("murderleaderboard.screen.rank_text", "Rank");
 		add("murderleaderboard.toast.title", "%s takes %s");
 		add("murderleaderboard.toast.subtitle", "Dethroning %s");
+
+		add("murderleaderboard.networking.choose_rank.failed", "Failed to choose rank %s");
+		add("murderleaderboard.networking.sync_kills.failed", "Failed to sync kills %s");
 	}
 }
