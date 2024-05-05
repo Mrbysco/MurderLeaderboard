@@ -139,20 +139,6 @@ if (System.getenv().CURSEFORGE_KEY) {
     }
 }
 
-if (System.getenv().MODRINTH_KEY) {
-    modrinth {
-        token = System.getenv().MODRINTH_KEY
-        projectId = project.modrinth_id
-        versionType = "beta"
-        versionName = "${mod_name} ${mc_version}"
-        versionNumber = project.version
-        uploadFile = jar
-        changelog = file("$project.rootDir/changelog.md").text
-        gameVersions = ["${mc_version}"]
-        loaders = ["neoforge"]
-    }
-}
-
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
 idea {
     module {
