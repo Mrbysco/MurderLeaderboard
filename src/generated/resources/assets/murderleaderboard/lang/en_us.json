@@ -1,6 +1,11 @@
 {
   "block.murderleaderboard.top_player": "Leaderboard Block",
   "murderleaderboard.blockentity.top_player": "Top Player",
+  "murderleaderboard.command.add_kill": "Add kill for murderer %s to user %s",
+  "murderleaderboard.command.clear": "Clear kills for user %s",
+  "murderleaderboard.command.invalid_username": "Invalid username '%s'. Username must be between 3-16 characters",
+  "murderleaderboard.command.remove_killer": "Remove murderer %s from user %s",
+  "murderleaderboard.command.set_kill": "Set kills of %s for murderer %s to %s",
   "murderleaderboard.leaderboard.close": "Close",
   "murderleaderboard.leaderboard.killCount": "Kill Count",
   "murderleaderboard.leaderboard.murderer": "Murderer",

@@ -1,12 +1,16 @@
 package com.mrbysco.murderleaderboard.world;
 
+import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
@@ -19,10 +23,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class MurderData extends SavedData {
-	public static Map<String, Map<String, Integer>> userKillMap = new HashMap<>();
+	public static final Map<String, Map<String, Integer>> userKillMap = new HashMap<>();
 
 	private static final String DATA_NAME = MurderLeaderboard.MOD_ID + "_data";
 
@@ -81,7 +86,7 @@ public class MurderData extends SavedData {
 	public List<KillData> getKillers(String user) {
 		List<MurderData.KillData> killList = new ArrayList<>();
 		Map<String, Integer> killMap = MurderData.userKillMap.getOrDefault(user.toLowerCase(Locale.ROOT), new HashMap<>());
-		if (!killMap.isEmpty()) {
+		if (!user.isEmpty() && !killMap.isEmpty()) {
 			killList.addAll(killMap.entrySet().stream().map(entry -> new MurderData.KillData(entry.getKey(), entry.getValue())).toList());
 			killList.sort(Comparator.comparingInt(MurderData.KillData::kills).reversed());
 		}
@@ -96,11 +101,11 @@ public class MurderData extends SavedData {
 		Set<String> users = userKillMap.keySet();
 		for (String user : users) {
 			CompoundTag saveTag = saveMap(new CompoundTag(), MurderData.userKillMap.getOrDefault(user, new HashMap<>()));
-			PacketDistributor.ALL.noArg().send(new SyncKillsMessage(user, killer, saveTag));
+			PacketDistributor.sendToAllPlayers(new SyncKillsMessage(user, killer, saveTag));
 		}
 	}
 
-	public static MurderData load(CompoundTag tag) {
+	public static MurderData load(CompoundTag tag, HolderLookup.Provider provider) {
 		syncMap();
 
 		ListTag userKillMapTag = tag.getList("KillMap", CompoundTag.TAG_COMPOUND);
@@ -128,7 +133,7 @@ public class MurderData extends SavedData {
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
+	public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
 		ListTag userKillMapTag = new ListTag();
 		for (Map.Entry<String, Map<String, Integer>> entry : userKillMap.entrySet()) {
 			CompoundTag userKillTag = new CompoundTag();
@@ -181,7 +186,7 @@ public class MurderData extends SavedData {
 		public ItemStack getSkull() {
 			if (skull == ItemStack.EMPTY) {
 				ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
-				skullStack.getOrCreateTag().putString("SkullOwner", name);
+				skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(name), Optional.empty(), new PropertyMap()));
 				this.skull = skullStack;
 			}
 			return skull;

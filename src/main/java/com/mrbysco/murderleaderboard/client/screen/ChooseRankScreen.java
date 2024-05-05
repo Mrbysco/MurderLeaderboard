@@ -52,7 +52,7 @@ public class ChooseRankScreen extends Screen {
 
 	@Override
 	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		this.rankField.render(guiGraphics, mouseX, mouseY, partialTicks);
 
@@ -61,8 +61,6 @@ public class ChooseRankScreen extends Screen {
 		String title = "Choose Rank";
 
 		guiGraphics.drawString(font, title, centerWidth - (this.font.width(title) / 2), centerHeight - 70, 16777215, false);
-
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -77,6 +75,6 @@ public class ChooseRankScreen extends Screen {
 
 	private void updateBlock() {
 		int rank = rankField.getInt();
-		PacketDistributor.SERVER.noArg().send(new ChooseRankPayload(position, rank));
+		PacketDistributor.sendToServer(new ChooseRankPayload(position, rank));
 	}
 }

@@ -122,7 +122,8 @@ public class LeaderboardScreen extends Screen {
 
 	@Override
 	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderDirtBackground(guiGraphics);
+		super.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+//		super.renderDirtBackground(guiGraphics);
 	}
 
 	public Font getFontRenderer() {

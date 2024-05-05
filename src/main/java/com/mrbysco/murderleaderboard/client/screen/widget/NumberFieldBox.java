@@ -7,7 +7,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 public class NumberFieldBox extends EditBox {
 
-	public int maxValue = 360;
+	public final int maxValue = 360;
 
 	public NumberFieldBox(Font font, int x, int y, int width, int height, Component defaultValue) {
 		super(font, x, y, width, height, defaultValue);

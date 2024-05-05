@@ -27,5 +27,11 @@ public class MurderLanguage extends LanguageProvider {
 
 		add("murderleaderboard.networking.choose_rank.failed", "Failed to choose rank %s");
 		add("murderleaderboard.networking.sync_kills.failed", "Failed to sync kills %s");
+
+		add("murderleaderboard.command.add_kill", "Add kill for murderer %s to user %s");
+		add("murderleaderboard.command.set_kill", "Set kills of %s for murderer %s to %s");
+		add("murderleaderboard.command.remove_killer", "Remove murderer %s from user %s");
+		add("murderleaderboard.command.clear", "Clear kills for user %s");
+		add("murderleaderboard.command.invalid_username", "Invalid username '%s'. Username must be between 3-16 characters");
 	}
 }

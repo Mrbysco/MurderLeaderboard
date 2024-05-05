@@ -6,10 +6,10 @@ import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -111,7 +111,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 
 		if (!level.isClientSide && level.getBlockEntity(pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 			if (placer instanceof Player player && !(player instanceof FakePlayer)) {
-				topPlayerBlockEntity.setOwner(player.getGameProfile().getName());
+				topPlayerBlockEntity.setOwnerName(player.getGameProfile().getName());
 				topPlayerBlockEntity.setRank(1);
 				topPlayerBlockEntity.updateTierProfile();
 			}
@@ -119,8 +119,8 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn) {
-		super.appendHoverText(stack, level, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+		super.appendHoverText(stack, context, tooltip, flagIn);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockPos blockpos = context.getClickedPos();
 		FluidState fluidstate = context.getLevel().getFluidState(blockpos);
-		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
 	}
 
 	@Override
@@ -142,9 +142,9 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult result) {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
 		if (level.isClientSide && level.getBlockEntity(pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
-			if (playerIn.isShiftKeyDown()) {
+			if (player.isShiftKeyDown()) {
 				//Open screen to select rank
 				com.mrbysco.murderleaderboard.client.screen.ChooseRankScreen.openScreen(pos, topPlayerBlockEntity.getRank());
 				return InteractionResult.SUCCESS;
@@ -168,11 +168,13 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 		return SHAPE;
 	}
 
+	@Override
 	public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
 		return Shapes.empty();
 	}
 
-	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType computationType) {
+	@Override
+	protected boolean isPathfindable(BlockState state, PathComputationType computationType) {
 		return false;
 	}
 }

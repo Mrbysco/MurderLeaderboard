@@ -5,13 +5,13 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.StringUtil;
 
 public class LeaderboardCommands {
 	public static void initializeCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -55,10 +55,13 @@ public class LeaderboardCommands {
 		dispatcher.register(root);
 	}
 
-	@SuppressWarnings("SameReturnValue")
-	private static int addKill(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+	private static int addKill(CommandContext<CommandSourceStack> ctx) {
 		String user = StringArgumentType.getString(ctx, "user");
 		String murderer = StringArgumentType.getString(ctx, "murderer");
+		if (!StringUtil.isValidPlayerName(murderer)) {
+			ctx.getSource().sendFailure(Component.translatable("murderleaderboard.command.invalid_username", murderer));
+			return 0;
+		}
 		ServerLevel overworld = ctx.getSource().getServer().overworld();
 
 		MurderData data = MurderData.get(overworld);
@@ -69,10 +72,13 @@ public class LeaderboardCommands {
 		return 0;
 	}
 
-	@SuppressWarnings("SameReturnValue")
-	private static int setKill(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+	private static int setKill(CommandContext<CommandSourceStack> ctx) {
 		String user = StringArgumentType.getString(ctx, "user");
 		String murderer = StringArgumentType.getString(ctx, "murderer");
+		if (!StringUtil.isValidPlayerName(murderer)) {
+			ctx.getSource().sendFailure(Component.translatable("murderleaderboard.command.invalid_username", murderer));
+			return 0;
+		}
 		int killCount = IntegerArgumentType.getInteger(ctx, "count");
 		ServerLevel overworld = ctx.getSource().getServer().overworld();
 
@@ -84,10 +90,13 @@ public class LeaderboardCommands {
 		return 0;
 	}
 
-	@SuppressWarnings("SameReturnValue")
-	private static int removeKiller(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+	private static int removeKiller(CommandContext<CommandSourceStack> ctx) {
 		String user = StringArgumentType.getString(ctx, "user");
 		String murderer = StringArgumentType.getString(ctx, "murderer");
+		if (!StringUtil.isValidPlayerName(murderer)) {
+			ctx.getSource().sendFailure(Component.translatable("murderleaderboard.command.invalid_username", murderer));
+			return 0;
+		}
 		ServerLevel overworld = ctx.getSource().getServer().overworld();
 
 		MurderData data = MurderData.get(overworld);
@@ -98,8 +107,7 @@ public class LeaderboardCommands {
 		return 0;
 	}
 
-	@SuppressWarnings("SameReturnValue")
-	private static int clear(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+	private static int clear(CommandContext<CommandSourceStack> ctx) {
 		String user = StringArgumentType.getString(ctx, "user");
 		ServerLevel overworld = ctx.getSource().getServer().overworld();
 

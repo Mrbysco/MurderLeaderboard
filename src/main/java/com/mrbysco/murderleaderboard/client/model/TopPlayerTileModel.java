@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
 
-public class TopPlayerTileModel<T extends LivingEntity> extends PlayerModel<T> {
+public class TopPlayerTileModel extends PlayerModel<LivingEntity> {
 	public TopPlayerTileModel(ModelPart part, boolean slim) {
 		super(part, slim);
 		this.hat.setPos(0.0F, -1.75F, 0.0F);

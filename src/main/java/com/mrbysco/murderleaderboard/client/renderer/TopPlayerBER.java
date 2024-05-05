@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.client.renderer;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -23,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -48,15 +48,16 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		BlockState blockstate = blockEntity.getBlockState();
 		boolean flag = blockstate.getBlock() instanceof TopPlayerBlock;
 		Direction direction = flag ? blockstate.getValue(TopPlayerBlock.FACING) : Direction.UP;
-		GameProfile profile = blockEntity.getPlayerProfile();
+		ResolvableProfile resolvableProfile = blockEntity.getKiller();
 
-		if (profile != null) {
+		if (resolvableProfile != null) {
+			System.out.println(resolvableProfile);
 			SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
-			if (isSlim != skinmanager.getInsecureSkin(profile).model().id().equals("slim"))
+			if (isSlim != skinmanager.getInsecureSkin(resolvableProfile.gameProfile()).model().id().equals("slim"))
 				isSlim = !isSlim;
 		}
 
-		render(direction, profile, poseStack, bufferSource, combinedLightIn, partialTicks);
+		render(direction, resolvableProfile, poseStack, bufferSource, combinedLightIn, partialTicks);
 
 		//Only render when the block is being looked at
 		final Minecraft minecraft = Minecraft.getInstance();
@@ -65,7 +66,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 			BlockPos blockpos = blockhitresult.getBlockPos();
 			if (blockEntity.getBlockPos().equals(blockpos)) {
 				String rank = String.format("#%s ", blockEntity.getRank());
-				Component name = profile != null ? Component.literal(rank + profile.getName()) : Component.literal(rank + "Unknown");
+				Component name = Component.literal(rank + (resolvableProfile != null ? resolvableProfile.name().get() : "unknown"));
 				float yOffset = 1.25F;
 				poseStack.pushPose();
 				poseStack.translate(0.0D, (double) yOffset, 0.0D);
@@ -84,7 +85,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		}
 	}
 
-	public void render(@Nullable Direction direction, @Nullable GameProfile profile, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, float partialTicks) {
+	public void render(@Nullable Direction direction, @Nullable ResolvableProfile resolvableProfile, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, float partialTicks) {
 		poseStack.translate(0.5D, 0.25D, 0.5D);
 		poseStack.pushPose();
 		if (direction != null) {
@@ -104,15 +105,15 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		poseStack.scale(-1.0F, -1.0F, 1.0F);
 		poseStack.translate(0.0D, -1.25D, 0.0D);
 
-		if (profile != null) {
-			final String s = ChatFormatting.stripFormatting(profile.getName());
+		if (resolvableProfile != null) {
+			final String s = ChatFormatting.stripFormatting(resolvableProfile.name().orElse("unknown"));
 			if ("Dinnerbone".equalsIgnoreCase(s) || "Grumm".equalsIgnoreCase(s)) {
 				poseStack.translate(0.0D, (double) (1.85F), 0.0D);
 				poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 			}
 		}
 
-		VertexConsumer vertexConsumer = bufferSource.getBuffer(getRenderType(profile));
+		VertexConsumer vertexConsumer = bufferSource.getBuffer(getRenderType(resolvableProfile));
 		TopPlayerTileModel playerModel = isSlim ? slimModel : model;
 
 		playerModel.renderToBuffer(poseStack, vertexConsumer, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
@@ -120,10 +121,10 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		poseStack.popPose();
 	}
 
-	public static RenderType getRenderType(@Nullable GameProfile gameProfile) {
-		if (gameProfile == null)
+	public static RenderType getRenderType(@Nullable ResolvableProfile resolvableProfile) {
+		if (resolvableProfile == null)
 			return RenderType.entityTranslucent(defaultTexture);
 		SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
-		return RenderType.entityTranslucent(skinmanager.getInsecureSkin(gameProfile).texture());
+		return RenderType.entityTranslucent(skinmanager.getInsecureSkin(resolvableProfile.gameProfile()).texture());
 	}
 }

@@ -1,16 +1,20 @@
 package com.mrbysco.murderleaderboard.network.handler;
 
+import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
 import com.mrbysco.murderleaderboard.toast.RankChangeToast;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 public class ClientPayloadHandler {
 	private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
@@ -26,9 +31,10 @@ public class ClientPayloadHandler {
 		return INSTANCE;
 	}
 
-	public void handleSyncData(final SyncKillsMessage syncData, final PlayPayloadContext context) {
-		context.workHandler().submitAsync(() -> {
-					context.player().ifPresent(player -> {
+	public void handleSyncData(final SyncKillsMessage syncData, final IPayloadContext context) {
+		context.enqueueWork(() -> {
+					if (context.player() != null) {
+						Player player = context.player();
 						String playerName = player.getGameProfile().getName().toLowerCase(Locale.ROOT);
 						String user = syncData.user();
 						String killer = syncData.killer();
@@ -75,18 +81,19 @@ public class ClientPayloadHandler {
 									//Check if rank changed and if so send a message
 									if (oldRank != -1 && newRank != -1 && oldRank != newRank && newRank < 10) {
 										ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
-										skullStack.getOrCreateTag().putString("SkullOwner", killer);
+										skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(killer), Optional.empty(), new PropertyMap()));
 										RankChangeToast toast = new RankChangeToast(newRank, killCache.get(newRank).name(), killer, skullStack);
 										Minecraft.getInstance().getToasts().addToast(toast);
 									}
 								}
 							}
 						}
-					});
+					}
+
 				})
 				.exceptionally(e -> {
 					// Handle exception
-					context.packetHandler().disconnect(Component.translatable("murderleaderboard.networking.sync_kills.failed", e.getMessage()));
+					context.disconnect(Component.translatable("murderleaderboard.networking.sync_kills.failed", e.getMessage()));
 					return null;
 				});
 	}

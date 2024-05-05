@@ -1,7 +1,6 @@
 package com.mrbysco.murderleaderboard.toast;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,6 +9,7 @@ import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4fStack;
 
 public class RankChangeToast implements Toast {
 	private static final ResourceLocation BACKGROUND_SPRITE = new ResourceLocation("toast/advancement");
@@ -51,13 +51,13 @@ public class RankChangeToast implements Toast {
 		Font font = component.getMinecraft().font;
 		guiGraphics.drawString(font, title, 30, 7, -11534256, false);
 		guiGraphics.drawString(font, subtitle, 30, 18, -16777216, false);
-		PoseStack posestack = RenderSystem.getModelViewStack();
-		posestack.pushPose();
-		posestack.translate(2.5D, 5D, 0);
-		posestack.scale(1.0F, 1.0F, 1.0F);
+		Matrix4fStack viewStack = RenderSystem.getModelViewStack();
+		viewStack.pushMatrix();
+		viewStack.translate(2.5F, 5F, 0F);
+		viewStack.scale(1.0F, 1.0F, 1.0F);
 		RenderSystem.applyModelViewMatrix();
 		guiGraphics.renderFakeItem(skull, 3, 3);
-		posestack.popPose();
+		viewStack.popMatrix();
 
 		return time - this.lastChanged < 5000L ? Toast.Visibility.SHOW : Toast.Visibility.HIDE;
 	}
