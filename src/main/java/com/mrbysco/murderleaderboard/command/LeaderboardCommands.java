@@ -10,6 +10,7 @@ import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 
 public class LeaderboardCommands {
@@ -63,6 +64,8 @@ public class LeaderboardCommands {
 		MurderData data = MurderData.get(overworld);
 		data.addKill(user, murderer);
 
+		ctx.getSource().sendSuccess(() -> Component.translatable("murderleaderboard.command.add_kill", murderer, user), true);
+
 		return 0;
 	}
 
@@ -76,6 +79,8 @@ public class LeaderboardCommands {
 		MurderData data = MurderData.get(overworld);
 		data.setKill(user, murderer, killCount);
 
+		ctx.getSource().sendSuccess(() -> Component.translatable("murderleaderboard.command.set_kill", user, murderer, killCount), true);
+
 		return 0;
 	}
 
@@ -88,6 +93,8 @@ public class LeaderboardCommands {
 		MurderData data = MurderData.get(overworld);
 		data.removeKiller(user, murderer);
 
+		ctx.getSource().sendSuccess(() -> Component.translatable("murderleaderboard.command.remove_killer", murderer, user), true);
+
 		return 0;
 	}
 
@@ -98,6 +105,8 @@ public class LeaderboardCommands {
 
 		MurderData data = MurderData.get(overworld);
 		data.clearKillers(user);
+
+		ctx.getSource().sendSuccess(() -> Component.translatable("murderleaderboard.command.clear", user), true);
 
 		return 0;
 	}
