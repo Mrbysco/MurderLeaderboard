@@ -31,8 +31,8 @@ public class MurderLootProvider extends LootTableProvider {
 
 	private static class MurderBlocks extends BlockLootSubProvider {
 
-		protected MurderBlocks() {
-			super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+		protected MurderBlocks(HolderLookup.Provider provider) {
+			super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
 		}
 
 		@Override

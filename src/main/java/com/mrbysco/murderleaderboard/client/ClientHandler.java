@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientHandler {
-	public static final ModelLayerLocation TOP_PLAYER = new ModelLayerLocation(new ResourceLocation(MurderLeaderboard.MOD_ID, "top_player"), "main");
-	public static final ModelLayerLocation TOP_PLAYER_SLIM = new ModelLayerLocation(new ResourceLocation(MurderLeaderboard.MOD_ID, "top_player_slim"), "main");
+	public static final ModelLayerLocation TOP_PLAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "top_player"), "main");
+	public static final ModelLayerLocation TOP_PLAYER_SLIM = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "top_player_slim"), "main");
 	public static final List<MurderData.KillData> killList = new ArrayList<>();
 
 	public static final KeyMapping KEY_OPEN_LEADERBOARD = new KeyMapping(

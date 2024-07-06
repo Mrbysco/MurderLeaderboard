@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4fStack;
 
 public class RankChangeToast implements Toast {
-	private static final ResourceLocation BACKGROUND_SPRITE = new ResourceLocation("toast/advancement");
+	private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/advancement");
 	private final int newRank;
 	private final String oldUser, newUser;
 	private final ItemStack skull;

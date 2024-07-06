@@ -48,10 +48,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 		}
 
 		if (compound.contains("profile", 10)) {
-			ResolvableProfile.CODEC
-					.parse(NbtOps.INSTANCE, compound.get("profile"))
-					.resultOrPartial(p_332637_ -> MurderLeaderboard.LOGGER.error("Failed to load profile from Top Player: {}", p_332637_))
-					.ifPresent(this::setKiller);
+			ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, compound.get("profile")).resultOrPartial(p_332637_ -> MurderLeaderboard.LOGGER.error("Failed to load profile from Top Player: {}", p_332637_)).ifPresent(this::setKiller);
 		}
 
 		if (compound.contains("custom_name", 8)) {
@@ -215,12 +212,5 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 		super.collectImplicitComponents(pComponents);
 		pComponents.set(DataComponents.PROFILE, this.killer);
 		pComponents.set(DataComponents.CUSTOM_NAME, this.customName);
-	}
-
-	@Override
-	public void removeComponentsFromTag(CompoundTag pTag) {
-		super.removeComponentsFromTag(pTag);
-		pTag.remove("profile");
-		pTag.remove("custom_name");
 	}
 }

@@ -33,7 +33,7 @@ public class TopPlayerTileModel extends PlayerModel<LivingEntity> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, int color) {
 		this.setAllVisible(true);
 		this.hat.visible = true;
 		this.jacket.visible = true;
@@ -41,6 +41,6 @@ public class TopPlayerTileModel extends PlayerModel<LivingEntity> {
 		this.rightPants.visible = true;
 		this.leftSleeve.visible = true;
 		this.rightSleeve.visible = true;
-		super.renderToBuffer(poseStack, vertexConsumer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		super.renderToBuffer(poseStack, vertexConsumer, packedLightIn, packedOverlayIn, color);
 	}
 }

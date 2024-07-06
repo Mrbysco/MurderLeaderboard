@@ -35,7 +35,7 @@ public class KillHandler {
 	}
 
 	@SubscribeEvent
-	public void onDamage(LivingDamageEvent event) {
+	public void onDamage(LivingDamageEvent.Pre event) {
 //		if (event.getEntity() instanceof Player player && !player.level().isClientSide) { //TODO: Only use while testing
 //			DamageSource source = event.getSource();
 //			if (source.getEntity() instanceof LivingEntity killer) {

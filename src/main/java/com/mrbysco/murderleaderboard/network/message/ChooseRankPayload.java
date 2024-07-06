@@ -11,7 +11,7 @@ public record ChooseRankPayload(BlockPos pos, int rank) implements CustomPacketP
 	public static final StreamCodec<FriendlyByteBuf, ChooseRankPayload> CODEC = CustomPacketPayload.codec(
 			ChooseRankPayload::write,
 			ChooseRankPayload::new);
-	public static final Type<ChooseRankPayload> ID = CustomPacketPayload.createType(new ResourceLocation(MurderLeaderboard.MOD_ID, "choose_rank").toString());
+	public static final Type<ChooseRankPayload> ID = new Type<>(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "choose_rank"));
 
 	public ChooseRankPayload(final FriendlyByteBuf packetBuffer) {
 		this(packetBuffer.readBlockPos(), packetBuffer.readInt());

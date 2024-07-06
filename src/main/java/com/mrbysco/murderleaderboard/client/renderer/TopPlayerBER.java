@@ -116,7 +116,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		VertexConsumer vertexConsumer = bufferSource.getBuffer(getRenderType(resolvableProfile));
 		TopPlayerTileModel playerModel = isSlim ? slimModel : model;
 
-		playerModel.renderToBuffer(poseStack, vertexConsumer, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		playerModel.renderToBuffer(poseStack, vertexConsumer, combinedLight, OverlayTexture.NO_OVERLAY, -1);
 
 		poseStack.popPose();
 	}
