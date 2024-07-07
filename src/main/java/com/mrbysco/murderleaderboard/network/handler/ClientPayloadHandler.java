@@ -2,9 +2,7 @@ package com.mrbysco.murderleaderboard.network.handler;
 
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
-import com.mrbysco.murderleaderboard.toast.RankChangeToast;
 import com.mrbysco.murderleaderboard.world.MurderData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -76,8 +74,7 @@ public class ClientPayloadHandler {
 									if (oldRank != -1 && newRank != -1 && oldRank != newRank && newRank < 10) {
 										ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
 										skullStack.getOrCreateTag().putString("SkullOwner", killer);
-										RankChangeToast toast = new RankChangeToast(newRank, killCache.get(newRank).name(), killer, skullStack);
-										Minecraft.getInstance().getToasts().addToast(toast);
+										ClientHandler.setToast(newRank, killCache.get(newRank).name(), killer, skullStack);
 									}
 								}
 							}

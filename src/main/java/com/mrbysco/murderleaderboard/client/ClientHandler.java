@@ -7,6 +7,7 @@ import com.mrbysco.murderleaderboard.blockentity.TopPlayerBlockEntity;
 import com.mrbysco.murderleaderboard.client.model.TopPlayerTileModel;
 import com.mrbysco.murderleaderboard.client.renderer.TopPlayerBER;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
+import com.mrbysco.murderleaderboard.toast.RankChangeToast;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -16,10 +17,11 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.Services;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -74,5 +76,10 @@ public class ClientHandler {
 		services.profileCache().setExecutor(mc);
 		TopPlayerBlockEntity.setup(services, mc);
 		GameProfileCache.setUsesAuthentication(false);
+	}
+
+	public static void setToast(int newRank, String name, String killer, ItemStack skullStack) {
+		RankChangeToast toast = new RankChangeToast(newRank, name, killer, skullStack);
+		Minecraft.getInstance().getToasts().addToast(toast);
 	}
 }
