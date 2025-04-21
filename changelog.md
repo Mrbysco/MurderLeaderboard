@@ -1,1 +1,1 @@
-* Fix potential server crash
+* Initial update to 1.21.4
