@@ -23,7 +23,7 @@ public class MurderModels extends ModelProvider {
 		super(packOutput, MurderLeaderboard.MOD_ID);
 	}
 
-	private static final ModelTemplate TOP_PLAYER = ModelTemplates.create(MurderLeaderboard.MOD_ID + ":top_player", TextureSlot.PARTICLE);
+	private static final ModelTemplate TOP_PLAYER = ModelTemplates.createItem(MurderLeaderboard.MOD_ID + ":template_player", TextureSlot.PARTICLE);
 
 	@Override
 	protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {

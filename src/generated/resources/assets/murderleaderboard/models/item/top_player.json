@@ -1,5 +1,5 @@
 {
-  "parent": "murderleaderboard:block/top_player",
+  "parent": "murderleaderboard:item/template_player",
   "textures": {
     "particle": "murderleaderboard:block/top_player"
   }

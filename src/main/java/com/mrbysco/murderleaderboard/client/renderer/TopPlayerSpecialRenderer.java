@@ -45,9 +45,8 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<Resolvable
 			isSlim = !isSlim;
 
 		poseStack.pushPose();
-		poseStack.scale(0.375F, 0.375F, 0.375F);
-		poseStack.mulPose(Axis.YN.rotationDegrees(-145F));
-		poseStack.translate(-1.5D, 0.25D, 0.5D);
+		poseStack.scale(0.5F, 0.5F, 0.5F);
+		poseStack.translate(0.5D, 0D, 0.5D);
 
 		TopPlayerTileModel playerModel = isSlim ? slimModel : model;
 		TopPlayerBER.renderPlayer(playerModel, null, resolvableProfile, poseStack, bufferSource, packedLight, packedOverlay);
