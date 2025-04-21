@@ -21,7 +21,6 @@ public class RankChangeToast implements Toast {
 	private final Component subtitle;
 	private long lastChanged;
 	private boolean changed;
-	private boolean forceHide;
 	private Toast.Visibility wantedVisibility = Toast.Visibility.HIDE;
 
 	public RankChangeToast(int newRank, String oldUser, String newUser, ItemStack skull) {

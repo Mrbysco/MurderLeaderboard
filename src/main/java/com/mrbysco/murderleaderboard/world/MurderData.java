@@ -1,9 +1,10 @@
 package com.mrbysco.murderleaderboard.world;
 
 import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -28,6 +30,14 @@ import java.util.Set;
 
 public class MurderData extends SavedData {
 	public static final Map<String, Map<String, Integer>> userKillMap = new HashMap<>();
+	public static final Codec<MurderData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.unboundedMap(Codec.STRING,
+							Codec.unboundedMap(
+									Codec.STRING,
+									Codec.INT
+							))
+					.fieldOf("KillMap").forGetter(MurderData::getKillMap)
+	).apply(instance, MurderData::new));
 
 	private static final String DATA_NAME = MurderLeaderboard.MOD_ID + "_data";
 
@@ -38,6 +48,10 @@ public class MurderData extends SavedData {
 
 	public MurderData() {
 		this(new HashMap<>());
+	}
+
+	public Map<String, Map<String, Integer>> getKillMap() {
+		return userKillMap;
 	}
 
 	public void addKill(String user, String killer) {
@@ -105,49 +119,6 @@ public class MurderData extends SavedData {
 		}
 	}
 
-	public static MurderData load(CompoundTag tag, HolderLookup.Provider provider) {
-		syncMap();
-
-		ListTag userKillMapTag = tag.getList("KillMap", CompoundTag.TAG_COMPOUND);
-		Map<String, Map<String, Integer>> userKillMap = new HashMap<>();
-
-		for (int i = 0; i < userKillMapTag.size(); ++i) {
-			CompoundTag userKillTag = userKillMapTag.getCompound(i);
-			String user = userKillTag.getString("Username");
-
-			Map<String, Integer> killMap = new HashMap<>();
-			ListTag killListTag = userKillTag.getList("Kills", ListTag.TAG_COMPOUND);
-			for (int j = 0; j < killListTag.size(); ++j) {
-				CompoundTag killTag = killListTag.getCompound(j);
-
-				String name = killTag.getString("Name");
-				int kills = killTag.getInt("Kills");
-
-				killMap.put(name, kills);
-			}
-
-			userKillMap.put(user, killMap);
-		}
-
-		return new MurderData(userKillMap);
-	}
-
-	@Override
-	public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
-		ListTag userKillMapTag = new ListTag();
-		for (Map.Entry<String, Map<String, Integer>> entry : userKillMap.entrySet()) {
-			CompoundTag userKillTag = new CompoundTag();
-			userKillTag.putString("Username", entry.getKey());
-
-			saveMap(userKillTag, entry.getValue());
-
-			userKillMapTag.add(userKillTag);
-		}
-		tag.put("KillMap", userKillMapTag);
-
-		return tag;
-	}
-
 	private static CompoundTag saveMap(CompoundTag tag, Map<String, Integer> map) {
 		ListTag killListTag = new ListTag();
 		for (Map.Entry<String, Integer> killEntry : map.entrySet()) {
@@ -162,6 +133,10 @@ public class MurderData extends SavedData {
 		return tag;
 	}
 
+	public static SavedDataType<MurderData> type() {
+		return new SavedDataType<>(DATA_NAME, MurderData::new, CODEC, null);
+	}
+
 	public static MurderData get(Level level) {
 		if (!(level instanceof ServerLevel)) {
 			throw new RuntimeException("Attempted to get the data from a client level. This is wrong.");
@@ -169,10 +144,15 @@ public class MurderData extends SavedData {
 		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
 		DimensionDataStorage storage = overworld.getDataStorage();
-		return storage.computeIfAbsent(new Factory<>(MurderData::new, MurderData::load), DATA_NAME);
+		return storage.computeIfAbsent(type());
 	}
 
 	public static final class KillData {
+		public static final Codec<KillData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Codec.STRING.fieldOf("Name").forGetter(KillData::name),
+				Codec.INT.fieldOf("Kills").forGetter(KillData::kills)
+		).apply(instance, KillData::new));
+
 		private final String name;
 		private final int kills;
 

@@ -1,11 +1,11 @@
 package com.mrbysco.murderleaderboard.blockentity;
 
 import com.mojang.authlib.properties.PropertyMap;
-import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.component.ResolvableProfile;
@@ -43,21 +44,15 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	public void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
 		super.loadAdditional(compound, provider);
 
-		if (compound.contains("Owner", 8)) {
-			this.owner = compound.getString("Owner");
+		if (compound.contains("Owner")) {
+			this.owner = compound.getStringOr("Owner", "");
 		}
 
-		if (compound.contains("profile", 10)) {
-			ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, compound.get("profile")).resultOrPartial(p_332637_ -> MurderLeaderboard.LOGGER.error("Failed to load profile from Top Player: {}", p_332637_)).ifPresent(this::setKiller);
-		}
+		this.setKiller(compound.read("profile", ResolvableProfile.CODEC).orElse(null));
 
-		if (compound.contains("custom_name", 8)) {
-			this.customName = Component.Serializer.fromJson(compound.getString("custom_name"), provider);
-		} else {
-			this.customName = null;
-		}
+		this.customName = parseCustomNameSafe(compound.get("custom_name"), provider);
 
-		this.setRank(compound.getInt("Rank"));
+		this.setRank(compound.getIntOr("Rank", 0));
 	}
 
 	@Override
@@ -68,13 +63,8 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 			compound.putString("Owner", this.owner);
 		}
 
-		if (this.killer != null) {
-			compound.put("profile", ResolvableProfile.CODEC.encodeStart(NbtOps.INSTANCE, this.killer).getOrThrow());
-		}
-
-		if (this.customName != null) {
-			compound.putString("custom_name", Component.Serializer.toJson(this.customName, provider));
-		}
+		compound.storeNullable("profile", ResolvableProfile.CODEC, this.killer);
+		compound.storeNullable("custom_name", ComponentSerialization.CODEC, provider.createSerializationContext(NbtOps.INSTANCE), this.customName);
 
 		compound.putInt("Rank", this.rank);
 	}
@@ -201,10 +191,10 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	}
 
 	@Override
-	protected void applyImplicitComponents(BlockEntity.DataComponentInput pComponentInput) {
-		super.applyImplicitComponents(pComponentInput);
-		this.setKiller(pComponentInput.get(DataComponents.PROFILE));
-		this.customName = pComponentInput.get(DataComponents.CUSTOM_NAME);
+	protected void applyImplicitComponents(DataComponentGetter componentGetter) {
+		super.applyImplicitComponents(componentGetter);
+		this.setKiller(componentGetter.get(DataComponents.PROFILE));
+		this.customName = componentGetter.get(DataComponents.CUSTOM_NAME);
 	}
 
 	@Override

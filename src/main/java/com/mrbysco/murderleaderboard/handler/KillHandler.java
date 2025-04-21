@@ -26,7 +26,7 @@ public class KillHandler {
 		CompoundTag persistentData = killer.getPersistentData();
 		if (persistentData.isEmpty()) return;
 
-		String killerName = persistentData.getString(MurderConfig.COMMON.nameKey.get());
+		String killerName = persistentData.getStringOr(MurderConfig.COMMON.nameKey.get(), "");
 		if (!killerName.isEmpty()) {
 			Level level = player.level();
 			MurderData data = MurderData.get(level);

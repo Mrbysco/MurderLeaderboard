@@ -40,12 +40,12 @@ public class ClientPayloadHandler {
 						if (playerName.equals(user)) {
 							Map<String, Integer> killMap = new HashMap<>();
 
-							ListTag killListTag = killMapTag.getList("Kills", ListTag.TAG_COMPOUND);
+							ListTag killListTag = killMapTag.getListOrEmpty("Kills");
 							for (int j = 0; j < killListTag.size(); ++j) {
-								CompoundTag killTag = killListTag.getCompound(j);
+								CompoundTag killTag = killListTag.getCompoundOrEmpty(j);
 
-								String name = killTag.getString("Name");
-								int kills = killTag.getInt("Kills");
+								String name = killTag.getStringOr("Name", "");
+								int kills = killTag.getIntOr("Kills", 0);
 
 								killMap.put(name, kills);
 							}

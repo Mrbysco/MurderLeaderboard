@@ -5,13 +5,10 @@ import com.mrbysco.murderleaderboard.blockentity.TopPlayerBlockEntity;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -41,8 +38,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
 	public static final MapCodec<TopPlayerBlock> CODEC = simpleCodec(TopPlayerBlock::new);
@@ -88,14 +83,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
-		if (state.hasBlockEntity() && newState.getBlock() != MurderRegistry.TOP_PLAYER.get()) {
-			level.removeBlockEntity(pos);
-		}
-	}
-
-	@Override
-	public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state) {
+	public ItemStack pickupBlock(@Nullable LivingEntity livingEntity, LevelAccessor accessor, BlockPos pos, BlockState state) {
 		return new ItemStack(state.getBlock());
 	}
 
@@ -115,11 +103,6 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 				topPlayerBlockEntity.updateTierProfile();
 			}
 		}
-	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-		super.appendHoverText(stack, context, tooltip, flagIn);
 	}
 
 	@Override

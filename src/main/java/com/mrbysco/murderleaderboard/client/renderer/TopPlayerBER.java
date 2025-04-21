@@ -27,6 +27,7 @@ import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -45,7 +46,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 	}
 
 	@Override
-	public void render(TopPlayerBlockEntity blockEntity, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn) {
+	public void render(TopPlayerBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraPos) {
 		BlockState blockstate = blockEntity.getBlockState();
 		boolean flag = blockstate.getBlock() instanceof TopPlayerBlock;
 		Direction direction = flag ? blockstate.getValue(TopPlayerBlock.FACING) : Direction.UP;
@@ -61,7 +62,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		poseStack.pushPose();
 		poseStack.scale(0.5625F, 0.5625F, 0.5625F);
 		poseStack.translate(0.375F, 0.0F, 0.375F);
-		renderPlayer(playerModel, direction, resolvableProfile, poseStack, bufferSource, combinedLightIn, partialTicks);
+		renderPlayer(playerModel, direction, resolvableProfile, poseStack, bufferSource, packedLight, partialTick);
 		poseStack.popPose();
 
 		//Only render when the block is being looked at
@@ -82,8 +83,8 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 				int j = (int) (backgroundOpacity * 255.0F) << 24;
 				Font font = minecraft.font;
 				float halfWidth = (float) (-font.width(name) / 2);
-				font.drawInBatch(name, halfWidth, (float) 0, 553648127, false, pose, bufferSource, flag ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, j, combinedLightIn);
-				font.drawInBatch(name, halfWidth, (float) 0, -1, false, pose, bufferSource, Font.DisplayMode.NORMAL, 0, combinedLightIn);
+				font.drawInBatch(name, halfWidth, (float) 0, 553648127, false, pose, bufferSource, flag ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, j, packedLight);
+				font.drawInBatch(name, halfWidth, (float) 0, -1, false, pose, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
 
 				poseStack.popPose();
 			}
