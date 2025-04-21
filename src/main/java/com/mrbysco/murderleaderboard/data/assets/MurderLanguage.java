@@ -33,5 +33,8 @@ public class MurderLanguage extends LanguageProvider {
 		add("murderleaderboard.command.remove_killer", "Remove murderer %s from user %s");
 		add("murderleaderboard.command.clear", "Clear kills for user %s");
 		add("murderleaderboard.command.invalid_username", "Invalid username '%s'. Username must be between 3-16 characters");
+
+		add("category.murderleaderboard.main", "Murder Leaderboard");
+		add("key.murderleaderboard.open_leaderboard", "Open Leaderboard");
 	}
 }

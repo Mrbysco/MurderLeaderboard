@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
@@ -51,13 +52,17 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		ResolvableProfile resolvableProfile = blockEntity.getKiller();
 
 		if (resolvableProfile != null) {
-			System.out.println(resolvableProfile);
 			SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
 			if (isSlim != skinmanager.getInsecureSkin(resolvableProfile.gameProfile()).model().id().equals("slim"))
 				isSlim = !isSlim;
 		}
 
-		render(direction, resolvableProfile, poseStack, bufferSource, combinedLightIn, partialTicks);
+		TopPlayerTileModel playerModel = isSlim ? slimModel : model;
+		poseStack.pushPose();
+		poseStack.scale(0.5625F, 0.5625F, 0.5625F);
+		poseStack.translate(0.375F, 0.0F, 0.375F);
+		renderPlayer(playerModel, direction, resolvableProfile, poseStack, bufferSource, combinedLightIn, partialTicks);
+		poseStack.popPose();
 
 		//Only render when the block is being looked at
 		final Minecraft minecraft = Minecraft.getInstance();
@@ -85,7 +90,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		}
 	}
 
-	public void render(@Nullable Direction direction, @Nullable ResolvableProfile resolvableProfile, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, float partialTicks) {
+	public static void renderPlayer(TopPlayerTileModel model, @Nullable Direction direction, @Nullable ResolvableProfile resolvableProfile, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, float partialTicks) {
 		poseStack.translate(0.5D, 0.25D, 0.5D);
 		poseStack.pushPose();
 		if (direction != null) {
@@ -114,9 +119,9 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		}
 
 		VertexConsumer vertexConsumer = bufferSource.getBuffer(getRenderType(resolvableProfile));
-		TopPlayerTileModel playerModel = isSlim ? slimModel : model;
 
-		playerModel.renderToBuffer(poseStack, vertexConsumer, combinedLight, OverlayTexture.NO_OVERLAY, -1);
+		model.setupAnim(new PlayerRenderState());
+		model.renderToBuffer(poseStack, vertexConsumer, combinedLight, OverlayTexture.NO_OVERLAY, -1);
 
 		poseStack.popPose();
 	}

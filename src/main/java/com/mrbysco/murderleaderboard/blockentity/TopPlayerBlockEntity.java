@@ -136,7 +136,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 		}
 	}
 
-	private void refreshClient() {
+	public void refreshClient() {
 		this.setChanged();
 		BlockState state = level.getBlockState(worldPosition);
 		level.sendBlockUpdated(worldPosition, state, state, 2);

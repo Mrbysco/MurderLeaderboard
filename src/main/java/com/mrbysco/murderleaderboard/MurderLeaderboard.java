@@ -44,6 +44,7 @@ public class MurderLeaderboard {
 			eventBus.addListener(ClientHandler::registerKeymapping);
 			eventBus.addListener(ClientHandler::registerEntityRenders);
 			eventBus.addListener(ClientHandler::registerLayerDefinitions);
+			eventBus.addListener(ClientHandler::registerSpecialModelRenderers);
 			NeoForge.EVENT_BUS.addListener(KeybindHandler::onClientTick);
 		}
 	}

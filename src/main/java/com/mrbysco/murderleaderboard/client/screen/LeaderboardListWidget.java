@@ -21,7 +21,7 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 	}
 
 	@Override
-	protected int getScrollbarPosition() {
+	protected int scrollBarX() {
 		return this.listWidth;
 	}
 

@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "murderleaderboard:item/top_player",
+    "model": {
+      "type": "murderleaderboard:top_player"
+    }
+  }
+}

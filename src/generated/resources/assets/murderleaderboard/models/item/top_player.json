@@ -1,3 +1,6 @@
 {
-  "parent": "murderleaderboard:block/top_player"
+  "parent": "murderleaderboard:block/top_player",
+  "textures": {
+    "particle": "murderleaderboard:block/top_player"
+  }
 }

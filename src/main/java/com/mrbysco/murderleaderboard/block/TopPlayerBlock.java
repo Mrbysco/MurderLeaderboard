@@ -31,12 +31,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -47,7 +46,7 @@ import java.util.List;
 
 public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
 	public static final MapCodec<TopPlayerBlock> CODEC = simpleCodec(TopPlayerBlock::new);
-	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	private static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
@@ -101,8 +100,8 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-		return super.getCloneItemStack(state, target, level, pos, player);
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+		return super.getCloneItemStack(level, pos, state, includeData, player);
 	}
 
 	@Override
@@ -158,6 +157,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
@@ -169,7 +169,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+	protected VoxelShape getOcclusionShape(BlockState state) {
 		return Shapes.empty();
 	}
 

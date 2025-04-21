@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.client.model.TopPlayerTileModel;
 import com.mrbysco.murderleaderboard.client.renderer.TopPlayerBER;
+import com.mrbysco.murderleaderboard.client.renderer.TopPlayerSpecialRenderer;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import com.mrbysco.murderleaderboard.toast.RankChangeToast;
 import com.mrbysco.murderleaderboard.world.MurderData;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -47,6 +49,10 @@ public class ClientHandler {
 
 	public static void setToast(int newRank, String name, String killer, ItemStack skullStack) {
 		RankChangeToast toast = new RankChangeToast(newRank, name, killer, skullStack);
-		Minecraft.getInstance().getToasts().addToast(toast);
+		Minecraft.getInstance().getToastManager().addToast(toast);
+	}
+
+	public static void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+		event.register(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "top_player"), TopPlayerSpecialRenderer.Unbaked.CODEC);
 	}
 }

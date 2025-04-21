@@ -14,6 +14,7 @@ public class ServerPayloadHandler {
 		return INSTANCE;
 	}
 
+	@SuppressWarnings("resource")
 	public void handleRankData(final ChooseRankPayload data, final IPayloadContext context) {
 		// Do something with the data, on the main thread
 		context.enqueueWork(() -> {
@@ -22,7 +23,7 @@ public class ServerPayloadHandler {
 						if (serverLevel.getBlockEntity(data.pos()) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 							topPlayerBlockEntity.setRank(data.rank());
 							topPlayerBlockEntity.updateTierProfile();
-							topPlayerBlockEntity.setChanged();
+							topPlayerBlockEntity.refreshClient();
 						}
 					}
 				})

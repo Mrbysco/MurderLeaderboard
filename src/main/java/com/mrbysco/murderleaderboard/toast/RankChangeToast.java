@@ -5,7 +5,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +21,8 @@ public class RankChangeToast implements Toast {
 	private final Component subtitle;
 	private long lastChanged;
 	private boolean changed;
+	private boolean forceHide;
+	private Toast.Visibility wantedVisibility = Toast.Visibility.HIDE;
 
 	public RankChangeToast(int newRank, String oldUser, String newUser, ItemStack skull) {
 		this.newRank = newRank + 1;
@@ -41,24 +44,31 @@ public class RankChangeToast implements Toast {
 		return s;
 	}
 
-	public Toast.Visibility render(GuiGraphics guiGraphics, ToastComponent component, long time) {
+	@Override
+	public Visibility getWantedVisibility() {
+		return this.wantedVisibility;
+	}
+
+	@Override
+	public void update(ToastManager toastManager, long time) {
 		if (this.changed) {
 			this.lastChanged = time;
 			this.changed = false;
 		}
 
-		guiGraphics.blitSprite(BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
-		Font font = component.getMinecraft().font;
+		this.wantedVisibility = time - this.lastChanged < 5000L ? Toast.Visibility.SHOW : Toast.Visibility.HIDE;
+	}
+
+	@Override
+	public void render(GuiGraphics guiGraphics, Font font, long visibilityTime) {
+		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		guiGraphics.drawString(font, title, 30, 7, -11534256, false);
 		guiGraphics.drawString(font, subtitle, 30, 18, -16777216, false);
 		Matrix4fStack viewStack = RenderSystem.getModelViewStack();
 		viewStack.pushMatrix();
 		viewStack.translate(2.5F, 5F, 0F);
 		viewStack.scale(1.0F, 1.0F, 1.0F);
-		RenderSystem.applyModelViewMatrix();
 		guiGraphics.renderFakeItem(skull, 3, 3);
 		viewStack.popMatrix();
-
-		return time - this.lastChanged < 5000L ? Toast.Visibility.SHOW : Toast.Visibility.HIDE;
 	}
 }
