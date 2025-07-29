@@ -4,6 +4,7 @@ import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.jetbrains.annotations.Nullable;
 
 public class MurderLanguage extends LanguageProvider {
 	public MurderLanguage(PackOutput packOutput) {
@@ -36,5 +37,21 @@ public class MurderLanguage extends LanguageProvider {
 
 		add("category.murderleaderboard.main", "Murder Leaderboard");
 		add("key.murderleaderboard.open_leaderboard", "Open Leaderboard");
+
+		addConfig("general", "General", "General Settings");
+		addConfig("nameKey", "Name Key", "The name for the key used to store the killer's name in the murderer's persistent data");
+	}
+
+	/**
+	 * Add the translation for a config entry
+	 *
+	 * @param path        The path of the config entry
+	 * @param name        The name of the config entry
+	 * @param description The description of the config entry (optional in case of targeting "title" or similar entries that have no tooltip)
+	 */
+	private void addConfig(String path, String name, @Nullable String description) {
+		this.add("murderleaderboard.configuration." + path, name);
+		if (description != null && !description.isEmpty())
+			this.add("murderleaderboard.configuration." + path + ".tooltip", description);
 	}
 }

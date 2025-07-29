@@ -1,6 +1,7 @@
 package com.mrbysco.murderleaderboard.blockentity;
 
 import com.mojang.authlib.properties.PropertyMap;
+import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.core.BlockPos;
@@ -10,17 +11,20 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -41,32 +45,30 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-		super.loadAdditional(compound, provider);
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
 
-		if (compound.contains("Owner")) {
-			this.owner = compound.getStringOr("Owner", "");
-		}
+		this.owner = input.getStringOr("Owner", "");
 
-		this.setKiller(compound.read("profile", ResolvableProfile.CODEC).orElse(null));
+		this.setKiller(input.read("profile", ResolvableProfile.CODEC).orElse(null));
 
-		this.customName = parseCustomNameSafe(compound.get("custom_name"), provider);
+		this.customName = parseCustomNameSafe(input, "custom_name");
 
-		this.setRank(compound.getIntOr("Rank", 0));
+		this.setRank(input.getIntOr("Rank", 0));
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-		super.saveAdditional(compound, provider);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
 
 		if (this.owner != null) {
-			compound.putString("Owner", this.owner);
+			output.putString("Owner", this.owner);
 		}
 
-		compound.storeNullable("profile", ResolvableProfile.CODEC, this.killer);
-		compound.storeNullable("custom_name", ComponentSerialization.CODEC, provider.createSerializationContext(NbtOps.INSTANCE), this.customName);
+		output.storeNullable("profile", ResolvableProfile.CODEC, this.killer);
+		output.storeNullable("custom_name", ComponentSerialization.CODEC, this.customName);
 
-		compound.putInt("Rank", this.rank);
+		output.putInt("Rank", this.rank);
 	}
 
 	@Override
@@ -75,25 +77,31 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider provider) {
-		loadAdditional(packet.getTag(), provider);
+	public void onDataPacket(Connection net, ValueInput valueInput) {
+		super.onDataPacket(net, valueInput);
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-		return this.saveCustomOnly(provider);
-	}
-
-	@Override
-	public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider provider) {
-		super.handleUpdateTag(tag, provider);
+	public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
+		CompoundTag tag = new CompoundTag();
+		try (ProblemReporter.ScopedCollector problemreporter$scopedcollector = new ProblemReporter.ScopedCollector(MurderLeaderboard.LOGGER)) {
+			TagValueOutput output = TagValueOutput.createWithContext(problemreporter$scopedcollector, lookupProvider);
+			this.saveAdditional(output);
+			tag.merge(output.buildResult());
+		}
+		return tag;
 	}
 
 	@Override
 	public CompoundTag getPersistentData() {
-		CompoundTag nbt = new CompoundTag();
-		this.saveAdditional(nbt, level != null ? level.registryAccess() : VanillaRegistries.createLookup());
-		return nbt;
+		CompoundTag tag = new CompoundTag();
+		try (ProblemReporter.ScopedCollector problemreporter$scopedcollector = new ProblemReporter.ScopedCollector(MurderLeaderboard.LOGGER)) {
+			HolderLookup.Provider lookupProvider = this.level != null ? this.level.registryAccess() : VanillaRegistries.createLookup();
+			TagValueOutput output = TagValueOutput.createWithContext(problemreporter$scopedcollector, lookupProvider);
+			this.saveAdditional(output);
+			tag.merge(output.buildResult());
+		}
+		return tag;
 	}
 
 	@Override

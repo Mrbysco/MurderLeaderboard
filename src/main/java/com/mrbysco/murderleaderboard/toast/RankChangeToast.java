@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +60,7 @@ public class RankChangeToast implements Toast {
 
 	@Override
 	public void render(GuiGraphics guiGraphics, Font font, long visibilityTime) {
-		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
+		guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		guiGraphics.drawString(font, title, 30, 7, -11534256, false);
 		guiGraphics.drawString(font, subtitle, 30, 18, -16777216, false);
 		Matrix4fStack viewStack = RenderSystem.getModelViewStack();

@@ -19,7 +19,7 @@ public class ServerPayloadHandler {
 		// Do something with the data, on the main thread
 		context.enqueueWork(() -> {
 					if (context.player() instanceof ServerPlayer serverPlayer) {
-						final ServerLevel serverLevel = serverPlayer.serverLevel();
+						final ServerLevel serverLevel = serverPlayer.level();
 						if (serverLevel.getBlockEntity(data.pos()) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 							topPlayerBlockEntity.setRank(data.rank());
 							topPlayerBlockEntity.updateTierProfile();

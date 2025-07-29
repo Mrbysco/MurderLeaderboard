@@ -58,12 +58,12 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 
 		private void renderFloatingItem(GuiGraphics guiGraphics, ItemStack stack, int x, int y) {
 			Minecraft mc = parent.getMinecraft();
-			guiGraphics.pose().pushPose();
-			guiGraphics.pose().translate(0.0F, 0.0F, 232.0F);
+			guiGraphics.pose().pushMatrix();
+//			guiGraphics.pose().translate(0.0F, 0.0F, 232.0F);
 			guiGraphics.renderItem(stack, x, y);
 			var font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
 			guiGraphics.renderItemDecorations(font == null ? mc.font : font, stack, x, y, null);
-			guiGraphics.pose().popPose();
+			guiGraphics.pose().popMatrix();
 		}
 
 		@Override

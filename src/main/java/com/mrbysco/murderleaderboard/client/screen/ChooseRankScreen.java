@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class ChooseRankScreen extends Screen {
 	private final BlockPos position;
@@ -75,6 +75,6 @@ public class ChooseRankScreen extends Screen {
 
 	private void updateBlock() {
 		int rank = rankField.getInt();
-		PacketDistributor.sendToServer(new ChooseRankPayload(position, rank));
+		ClientPacketDistributor.sendToServer(new ChooseRankPayload(position, rank));
 	}
 }

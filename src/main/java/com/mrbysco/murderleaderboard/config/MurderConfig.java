@@ -12,7 +12,7 @@ public class MurderConfig {
 
 		Common(ModConfigSpec.Builder builder) {
 			builder.comment("General settings")
-					.push("General");
+					.push("general");
 
 			nameKey = builder
 					.comment("The name for the key used to store the killer's name in the murderer's persistent data")

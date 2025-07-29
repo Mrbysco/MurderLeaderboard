@@ -2,7 +2,6 @@ package com.mrbysco.murderleaderboard.client.renderer;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.client.model.TopPlayerTileModel;
@@ -17,13 +16,13 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class TopPlayerSpecialRenderer implements SpecialModelRenderer<ResolvableProfile> {
 	private final TopPlayerTileModel model;
@@ -44,14 +43,15 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<Resolvable
 		if (resolvableProfile != null && isSlim != skinmanager.getInsecureSkin(resolvableProfile.gameProfile()).model().id().equals("slim"))
 			isSlim = !isSlim;
 
-		poseStack.pushPose();
-		poseStack.scale(0.5F, 0.5F, 0.5F);
-		poseStack.translate(0.5D, 0D, 0.5D);
-
 		TopPlayerTileModel playerModel = isSlim ? slimModel : model;
 		TopPlayerBER.renderPlayer(playerModel, null, resolvableProfile, poseStack, bufferSource, packedLight, packedOverlay);
+	}
 
-		poseStack.popPose();
+	@Override
+	public void getExtents(Set<Vector3f> output) {
+		PoseStack poseStack = new PoseStack();
+		poseStack.scale(0.5F, 0.5F, 0.5F);
+		poseStack.translate(0.5D, 0D, 0.5D);
 	}
 
 	private static final Map<String, ResolvableProfile> GAMEPROFILE_CACHE = new HashMap<>();
@@ -105,7 +105,6 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<Resolvable
 		return gameprofile;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static record Unbaked() implements SpecialModelRenderer.Unbaked {
 		public static final Unbaked INSTANCE = new Unbaked();
 		public static MapCodec<Unbaked> CODEC = MapCodec.unit(INSTANCE).stable();
@@ -115,7 +114,6 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<Resolvable
 			return CODEC;
 		}
 
-		@Nullable
 		@Override
 		public SpecialModelRenderer<?> bake(EntityModelSet entityModelSet) {
 			TopPlayerTileModel model = new TopPlayerTileModel(entityModelSet.bakeLayer(ClientHandler.TOP_PLAYER), false);
