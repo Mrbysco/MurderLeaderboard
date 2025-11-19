@@ -69,7 +69,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 
 	@Nullable
 	protected static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends TopPlayerBlockEntity> blockEntityType1) {
-		return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntityType1, TopPlayerBlockEntity::serverTick);
+		return level.isClientSide() ? null : createTickerHelper(blockEntityType, blockEntityType1, TopPlayerBlockEntity::serverTick);
 	}
 
 	@Override
@@ -96,9 +96,9 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(level, pos, state, placer, stack);
 
-		if (!level.isClientSide && level.getBlockEntity(pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
+		if (!level.isClientSide() && level.getBlockEntity(pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 			if (placer instanceof Player player && !(player instanceof FakePlayer)) {
-				topPlayerBlockEntity.setOwnerName(player.getGameProfile().getName());
+				topPlayerBlockEntity.setOwnerName(player.getGameProfile().name());
 				topPlayerBlockEntity.setRank(1);
 				topPlayerBlockEntity.updateTierProfile();
 			}
@@ -125,7 +125,7 @@ public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterlogged
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
-		if (level.isClientSide && level.getBlockEntity(pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
+		if (level.isClientSide() && level.getBlockEntity(pos) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 			if (player.isShiftKeyDown()) {
 				//Open screen to select rank
 				com.mrbysco.murderleaderboard.client.screen.ChooseRankScreen.openScreen(pos, topPlayerBlockEntity.getRank());

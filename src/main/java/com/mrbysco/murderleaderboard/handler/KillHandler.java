@@ -30,7 +30,7 @@ public class KillHandler {
 		if (!killerName.isEmpty()) {
 			Level level = player.level();
 			MurderData data = MurderData.get(level);
-			data.addKill(player.getGameProfile().getName(), killerName);
+			data.addKill(player.getGameProfile().name(), killerName);
 		}
 	}
 

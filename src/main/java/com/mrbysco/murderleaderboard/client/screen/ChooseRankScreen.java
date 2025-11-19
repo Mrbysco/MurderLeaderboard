@@ -68,11 +68,6 @@ public class ChooseRankScreen extends Screen {
 		super.tick();
 	}
 
-	@Override
-	public boolean charTyped(char codePoint, int modifiers) {
-		return super.charTyped(codePoint, modifiers);
-	}
-
 	private void updateBlock() {
 		int rank = rankField.getInt();
 		ClientPacketDistributor.sendToServer(new ChooseRankPayload(position, rank));

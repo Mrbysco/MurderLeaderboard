@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.network.handler;
 
-import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
 import com.mrbysco.murderleaderboard.world.MurderData;
@@ -20,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 public class ClientPayloadHandler {
 	private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
@@ -33,7 +31,7 @@ public class ClientPayloadHandler {
 		context.enqueueWork(() -> {
 					if (context.player() != null) {
 						Player player = context.player();
-						String playerName = player.getGameProfile().getName().toLowerCase(Locale.ROOT);
+						String playerName = player.getGameProfile().name().toLowerCase(Locale.ROOT);
 						String user = syncData.user();
 						String killer = syncData.killer();
 						CompoundTag killMapTag = syncData.killMapTag();
@@ -80,7 +78,7 @@ public class ClientPayloadHandler {
 									if (oldRank != -1 && newRank != -1 && oldRank != newRank && newRank < 10) {
 										ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
 
-										skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(killer), Optional.empty(), new PropertyMap()));
+										skullStack.set(DataComponents.PROFILE, ResolvableProfile.createUnresolved(killer));
 										ClientHandler.setToast(newRank, killCache.get(newRank).name(), killer, skullStack);
 									}
 								}

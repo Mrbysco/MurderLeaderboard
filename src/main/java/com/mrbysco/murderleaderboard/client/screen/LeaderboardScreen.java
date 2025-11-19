@@ -10,6 +10,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.loading.StringUtils;
 
@@ -130,20 +131,25 @@ public class LeaderboardScreen extends Screen {
 		return font;
 	}
 
-	public void setSelected(LeaderboardListWidget.ListEntry entry) {
-		this.selected = entry == this.selected ? null : entry;
+	public void setSelected(LeaderboardListWidget.ListEntry previousEntry, LeaderboardListWidget.ListEntry entry) {
+		if (this.selected == previousEntry) {
+			this.selected = entry;
+		} else {
+			if (this.selected == null || entry != null) {
+				this.selected = entry;
+			}
+		}
 	}
 
 	/**
 	 * Clear the search field when right-clicked on it
 	 */
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		boolean flag = super.mouseClicked(mouseX, mouseY, button);
-		if (button == 1 && search.isMouseOver(mouseX, mouseY)) {
+	public boolean mouseClicked(MouseButtonEvent buttonEvent, boolean doubleClicked) {
+		if (buttonEvent.button() == 1 && search.isMouseOver(buttonEvent.x(), buttonEvent.y())) {
 			search.setValue("");
 		}
-		return flag;
+		return super.mouseClicked(buttonEvent, doubleClicked);
 	}
 
 	@Override

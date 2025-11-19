@@ -1,12 +1,12 @@
 package com.mrbysco.murderleaderboard.item;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
 public class TopPlayerBlockItem extends BlockItem {
 
@@ -14,12 +14,8 @@ public class TopPlayerBlockItem extends BlockItem {
 		super(blockIn, builder);
 	}
 
-	@Override
-	public void verifyComponentsAfterLoad(ItemStack stack) {
-		ResolvableProfile resolvableprofile = stack.get(DataComponents.PROFILE);
-		if (resolvableprofile != null && !resolvableprofile.isResolved()) {
-			resolvableprofile.resolve()
-					.thenAcceptAsync(profile -> stack.set(DataComponents.PROFILE, profile), SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR);
-		}
+	public Component getName(ItemStack stack) {
+		ResolvableProfile resolvableprofile = (ResolvableProfile) stack.get(DataComponents.PROFILE);
+		return (Component) (resolvableprofile != null && resolvableprofile.name().isPresent() ? Component.translatable(this.descriptionId + ".named", new Object[]{resolvableprofile.name().get()}) : super.getName(stack));
 	}
 }

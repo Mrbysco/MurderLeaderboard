@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.blockentity;
 
-import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import com.mrbysco.murderleaderboard.world.MurderData;
@@ -20,7 +19,6 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -29,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 
@@ -116,22 +113,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 
 
 	public void setKiller(@Nullable ResolvableProfile killer) {
-		synchronized (this) {
-			this.killer = killer;
-		}
-
-		this.updateOwnerProfile();
-	}
-
-	private void updateOwnerProfile() {
-		if (this.killer != null && !this.killer.isResolved()) {
-			this.killer.resolve().thenAcceptAsync(profile -> {
-				this.killer = profile;
-				this.setChanged();
-			}, SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR);
-		} else {
-			this.setChanged();
-		}
+		this.killer = killer;
 	}
 
 	public void refreshClient() {
@@ -177,10 +159,10 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	}
 
 	public void updateTierProfile() {
-		if (this.level != null && !this.level.isClientSide && this.owner != null) {
+		if (this.level != null && !this.level.isClientSide() && this.owner != null) {
 			ResolvableProfile currentProfile = getKiller();
 			MurderData data = MurderData.get(level);
-			ResolvableProfile defaultProfile = new ResolvableProfile(Optional.of("steve"), Optional.empty(), new PropertyMap());
+			ResolvableProfile defaultProfile = ResolvableProfile.createUnresolved("steve");
 			List<MurderData.KillData> killList = data.getKillers(getOwnerName());
 			if (killList.isEmpty()) {
 				if (currentProfile == null || !currentProfile.name().get().equalsIgnoreCase(defaultProfile.name().get()))
@@ -192,7 +174,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 				} else {
 					String killer = killList.get((getRank() - 1)).name().toLowerCase(Locale.ROOT);
 					if (currentProfile == null || !currentProfile.name().get().equalsIgnoreCase(killer))
-						this.setKiller(new ResolvableProfile(Optional.of(killer), Optional.empty(), new PropertyMap()));
+						this.setKiller(ResolvableProfile.createUnresolved(killer));
 				}
 			}
 		}

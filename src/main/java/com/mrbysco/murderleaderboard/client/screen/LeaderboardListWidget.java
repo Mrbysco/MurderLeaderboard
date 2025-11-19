@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.Nullable;
 
 public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWidget.ListEntry> {
 	private final LeaderboardScreen parent;
@@ -30,6 +31,12 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 		return this.listWidth;
 	}
 
+	@Override
+	public void setSelected(@Nullable LeaderboardListWidget.ListEntry selected) {
+		this.parent.setSelected(getSelected(), selected);
+		super.setSelected(selected);
+	}
+
 	public void refreshList() {
 		this.clearEntries();
 		parent.buildLeaderboard(this::addEntry, location -> new ListEntry(location, this.parent));
@@ -44,14 +51,16 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 			this.parent = parent;
 		}
 
+
 		@Override
-		public void render(GuiGraphics guiGraphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
+		public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+			Font font = this.parent.getFontRenderer();
+			int top = getContentY();
 			String killer = killData.name();
 			String killCount = String.valueOf(killData.kills());
 
-			Font font = this.parent.getFontRenderer();
-			guiGraphics.drawWordWrap(font, Component.literal(killer), (this.parent.width / 2) - 80, top + 6, 160, 0xFFFFFF);
-			guiGraphics.drawString(font, killCount, (this.parent.width / 2) + 100 - (font.width(killCount) / 2), top + 6, 0xFFFFFF, false);
+			guiGraphics.drawWordWrap(font, Component.literal(killer), (this.parent.width / 2) - 80, top + 6, 160, 0xFFFFffFF);
+			guiGraphics.drawString(font, killCount, (this.parent.width / 2) + 100 - (font.width(killCount) / 2), top + 6, 0xFFFFFffF, false);
 
 			renderFloatingItem(guiGraphics, getSkull(), (this.parent.width / 2) - 106, top + 1);
 		}
@@ -59,18 +68,10 @@ public class LeaderboardListWidget extends ObjectSelectionList<LeaderboardListWi
 		private void renderFloatingItem(GuiGraphics guiGraphics, ItemStack stack, int x, int y) {
 			Minecraft mc = parent.getMinecraft();
 			guiGraphics.pose().pushMatrix();
-//			guiGraphics.pose().translate(0.0F, 0.0F, 232.0F);
 			guiGraphics.renderItem(stack, x, y);
 			var font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
 			guiGraphics.renderItemDecorations(font == null ? mc.font : font, stack, x, y, null);
 			guiGraphics.pose().popMatrix();
-		}
-
-		@Override
-		public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-			parent.setSelected(this);
-			LeaderboardListWidget.this.setSelected(this);
-			return false;
 		}
 
 		public String getKiller() {

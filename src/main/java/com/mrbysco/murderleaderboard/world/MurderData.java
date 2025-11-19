@@ -1,6 +1,5 @@
 package com.mrbysco.murderleaderboard.world;
 
-import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 public class MurderData extends SavedData {
@@ -166,7 +164,7 @@ public class MurderData extends SavedData {
 		public ItemStack getSkull() {
 			if (skull == ItemStack.EMPTY) {
 				ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
-				skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(name), Optional.empty(), new PropertyMap()));
+				skullStack.set(DataComponents.PROFILE, ResolvableProfile.createUnresolved(name));
 				this.skull = skullStack;
 			}
 			return skull;

@@ -9,6 +9,7 @@ import com.mrbysco.murderleaderboard.handler.KillHandler;
 import com.mrbysco.murderleaderboard.handler.SyncHandler;
 import com.mrbysco.murderleaderboard.network.PacketHandler;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -46,7 +47,6 @@ public class MurderLeaderboard {
 			container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 			eventBus.addListener(ClientHandler::registerKeymapping);
 			eventBus.addListener(ClientHandler::registerEntityRenders);
-			eventBus.addListener(ClientHandler::registerLayerDefinitions);
 			eventBus.addListener(ClientHandler::registerSpecialModelRenderers);
 			NeoForge.EVENT_BUS.addListener(KeybindHandler::onClientTick);
 		}
@@ -60,5 +60,9 @@ public class MurderLeaderboard {
 
 	public void onCommandRegister(RegisterCommandsEvent event) {
 		LeaderboardCommands.initializeCommands(event.getDispatcher());
+	}
+
+	public static ResourceLocation modLoc(String path) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

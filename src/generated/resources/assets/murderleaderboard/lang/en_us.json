@@ -1,6 +1,6 @@
 {
   "block.murderleaderboard.top_player": "Leaderboard Block",
-  "category.murderleaderboard.main": "Murder Leaderboard",
+  "key.category.murderleaderboard.category": "Murder Leaderboard",
   "key.murderleaderboard.open_leaderboard": "Open Leaderboard",
   "murderleaderboard.blockentity.top_player": "Top Player",
   "murderleaderboard.command.add_kill": "Add kill for murderer %s to user %s",

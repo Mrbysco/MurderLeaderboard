@@ -14,11 +14,6 @@ public class NumberFieldBox extends EditBox {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		return super.keyPressed(keyCode, scanCode, modifiers);
-	}
-
-	@Override
 	public void insertText(String textToWrite) {
 		if (this.isNumeric(textToWrite)) super.insertText(textToWrite);
 

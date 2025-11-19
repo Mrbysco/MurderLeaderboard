@@ -5,13 +5,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 public record SyncKillsMessage(String user, String killer, CompoundTag killMapTag) implements CustomPacketPayload {
 	public static final StreamCodec<FriendlyByteBuf, SyncKillsMessage> CODEC = CustomPacketPayload.codec(
 			SyncKillsMessage::write,
 			SyncKillsMessage::new);
-	public static final Type<SyncKillsMessage> ID = new Type<>(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "sync_kills"));
+	public static final Type<SyncKillsMessage> ID = new Type<>(MurderLeaderboard.modLoc("sync_kills"));
 
 	public SyncKillsMessage(final FriendlyByteBuf buffer) {
 		this(buffer.readUtf(), buffer.readUtf(), buffer.readNbt());
