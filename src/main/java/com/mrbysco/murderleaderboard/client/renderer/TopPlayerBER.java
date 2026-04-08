@@ -59,7 +59,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity, T
 	@Override
 	public void extractRenderState(TopPlayerBlockEntity blockEntity, TopPlayerRenderState renderState,
 	                               float partialTick, Vec3 cameraPosition,
-	                               @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+	                               ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
 		BlockState state = blockEntity.getBlockState();
