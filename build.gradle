@@ -170,10 +170,6 @@ if (System.getenv().MODRINTH_KEY) {
         changelog = file("$project.rootDir/changelog.md").text
         gameVersions = ["${mc_version}"]
         loaders = ["neoforge"]
-
-        dependencies {
-
-        }
     }
 }
 
