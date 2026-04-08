@@ -9,15 +9,16 @@ import com.mrbysco.murderleaderboard.client.state.TopPlayerRenderState;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -25,7 +26,7 @@ import net.minecraft.client.resources.SkinManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +43,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity, T
 	private final PlayerModel slimModel;
 	public static boolean isSlim = false;
 
-	public static final ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultTexture();
+	public static final Identifier defaultTexture = DefaultPlayerSkin.getDefaultTexture();
 
 	public TopPlayerBER(BlockEntityRendererProvider.Context context) {
 		this.playerSkinRenderCache = context.playerSkinRenderCache();
@@ -162,7 +163,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity, T
 
 	public RenderType getRenderType(@Nullable ResolvableProfile resolvableProfile) {
 		if (resolvableProfile == null)
-			return RenderType.entityTranslucent(defaultTexture);
+			return RenderTypes.entityTranslucent(defaultTexture);
 
 		return playerSkinRenderCache.getOrDefault(resolvableProfile).renderType();
 	}

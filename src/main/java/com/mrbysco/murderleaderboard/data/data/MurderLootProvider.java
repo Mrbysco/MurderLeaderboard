@@ -2,15 +2,11 @@ package com.mrbysco.murderleaderboard.data.data;
 
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.List;
@@ -22,11 +18,6 @@ public class MurderLootProvider extends LootTableProvider {
 		super(packOutput, Set.of(), List.of(
 				new SubProviderEntry(MurderBlocks::new, LootContextParamSets.BLOCK)
 		), lookupProvider);
-	}
-
-	@Override
-	protected void validate(WritableRegistry<LootTable> writableregistry, ValidationContext validationcontext, ProblemReporter.Collector problemreporter$collector) {
-		super.validate(writableregistry, validationcontext, problemreporter$collector);
 	}
 
 	private static class MurderBlocks extends BlockLootSubProvider {

@@ -3,7 +3,6 @@ package com.mrbysco.murderleaderboard.client.screen;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -153,10 +152,10 @@ public class LeaderboardScreen extends Screen {
 	}
 
 	@Override
-	public void resize(Minecraft mc, int width, int height) {
+	public void resize(int width, int height) {
 		String s = this.search.getValue();
 		LeaderboardListWidget.ListEntry selected = this.selected;
-		this.init(mc, width, height);
+		this.init(width, height);
 		this.search.setValue(s);
 		this.selected = selected;
 		if (!this.search.getValue().isEmpty())

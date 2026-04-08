@@ -1,15 +1,13 @@
 package com.mrbysco.murderleaderboard;
 
 import com.mojang.logging.LogUtils;
-import com.mrbysco.murderleaderboard.client.ClientHandler;
-import com.mrbysco.murderleaderboard.client.KeybindHandler;
 import com.mrbysco.murderleaderboard.command.LeaderboardCommands;
 import com.mrbysco.murderleaderboard.config.MurderConfig;
 import com.mrbysco.murderleaderboard.handler.KillHandler;
 import com.mrbysco.murderleaderboard.handler.SyncHandler;
 import com.mrbysco.murderleaderboard.network.PacketHandler;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -45,10 +43,6 @@ public class MurderLeaderboard {
 
 		if (dist.isClient()) {
 			container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-			eventBus.addListener(ClientHandler::registerKeymapping);
-			eventBus.addListener(ClientHandler::registerEntityRenders);
-			eventBus.addListener(ClientHandler::registerSpecialModelRenderers);
-			NeoForge.EVENT_BUS.addListener(KeybindHandler::onClientTick);
 		}
 	}
 
@@ -62,7 +56,7 @@ public class MurderLeaderboard {
 		LeaderboardCommands.initializeCommands(event.getDispatcher());
 	}
 
-	public static ResourceLocation modLoc(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier modLoc(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

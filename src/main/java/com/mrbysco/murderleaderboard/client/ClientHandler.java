@@ -10,6 +10,9 @@ import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
@@ -18,6 +21,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientHandler {
 	public static final List<MurderData.KillData> killList = new ArrayList<>();
 
@@ -28,11 +32,13 @@ public class ClientHandler {
 			GLFW.GLFW_KEY_KP_ADD,
 			CATEGORY);
 
+	@SubscribeEvent
 	public static void registerKeymapping(final RegisterKeyMappingsEvent event) {
 		event.registerCategory(CATEGORY);
 		event.register(KEY_OPEN_LEADERBOARD);
 	}
 
+	@SubscribeEvent
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(MurderRegistry.TOP_PLAYER_ENTITY.get(), TopPlayerBER::new);
 	}
@@ -42,6 +48,7 @@ public class ClientHandler {
 		Minecraft.getInstance().getToastManager().addToast(toast);
 	}
 
+	@SubscribeEvent
 	public static void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
 		event.register(MurderLeaderboard.modLoc("top_player"), TopPlayerSpecialRenderer.Unbaked.MAP_CODEC);
 	}

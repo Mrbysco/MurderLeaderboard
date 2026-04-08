@@ -13,7 +13,7 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 
@@ -29,7 +29,7 @@ public class MurderModels extends ModelProvider {
 	protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
 		blockModels.createParticleOnlyBlock(MurderRegistry.TOP_PLAYER.get(), Blocks.SOUL_SAND);
 		Item item = MurderRegistry.TOP_PLAYER.asItem();
-		ResourceLocation resourcelocation = TOP_PLAYER.create(item, TextureMapping.particle(MurderRegistry.TOP_PLAYER.get()), blockModels.modelOutput);
+		Identifier resourcelocation = TOP_PLAYER.create(item, TextureMapping.particle(MurderRegistry.TOP_PLAYER.get()), blockModels.modelOutput);
 		ItemModel.Unbaked itemmodel$unbaked = ItemModelUtils.specialModel(resourcelocation, new TopPlayerSpecialRenderer.Unbaked());
 		itemModels.itemModelOutput.accept(item, itemmodel$unbaked);
 	}
