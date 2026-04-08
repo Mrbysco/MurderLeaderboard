@@ -37,7 +37,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TopPlayerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
 	public static final MapCodec<TopPlayerBlock> CODEC = simpleCodec(TopPlayerBlock::new);

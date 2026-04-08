@@ -12,12 +12,11 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Util;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -35,8 +34,8 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<PlayerSkin
 	}
 
 	@Override
-	public void submit(@Nullable PlayerSkinRenderCache.RenderInfo argument, ItemDisplayContext displayContext,
-	                   PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay,
+	public void submit(@Nullable PlayerSkinRenderCache.RenderInfo argument, PoseStack poseStack,
+	                   SubmitNodeCollector nodeCollector, int lightCoords, int overlayCoords,
 	                   boolean hasFoil, int outlineColor) {
 		poseStack.pushPose();
 		transform(poseStack);
@@ -44,7 +43,7 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<PlayerSkin
 		RenderType rendertype = argument != null ? argument.renderType() : PlayerSkinRenderCache.DEFAULT_PLAYER_SKIN_RENDER_TYPE;
 		GameProfile gameProfile = argument != null ? argument.gameProfile() : new GameProfile(Util.NIL_UUID, "Steve");
 		TopPlayerBER.submitPlayerStatue(nodeCollector, null, gameProfile, playerModel,
-				poseStack, rendertype, packedLight, null);
+				poseStack, rendertype, lightCoords, null);
 		poseStack.popPose();
 	}
 
@@ -61,25 +60,25 @@ public class TopPlayerSpecialRenderer implements SpecialModelRenderer<PlayerSkin
 		poseStack.translate(1D, 0D, 0.75D);
 	}
 
-	@Nullable
-	public PlayerSkinRenderCache.RenderInfo extractArgument(ItemStack stack) {
+	@Override
+	public @Nullable PlayerSkinRenderCache.RenderInfo extractArgument(ItemStack stack) {
 		ResolvableProfile resolvableprofile = stack.get(DataComponents.PROFILE);
 		return resolvableprofile == null ? null : this.playerSkinRenderCache.getOrDefault(resolvableprofile);
 	}
 
-	public record Unbaked() implements SpecialModelRenderer.Unbaked {
+	public record Unbaked() implements SpecialModelRenderer.Unbaked<PlayerSkinRenderCache.RenderInfo> {
 		public static final Unbaked INSTANCE = new Unbaked();
 		public static final MapCodec<TopPlayerSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(INSTANCE);
 
-		@NotNull
+		@NonNull
 		@Override
 		public MapCodec<TopPlayerSpecialRenderer.Unbaked> type() {
 			return MAP_CODEC;
 		}
 
-		@NotNull
+		@NonNull
 		@Override
-		public SpecialModelRenderer<?> bake(SpecialModelRenderer.BakingContext context) {
+		public SpecialModelRenderer<PlayerSkinRenderCache.RenderInfo> bake(SpecialModelRenderer.BakingContext context) {
 			final EntityModelSet entityModelSet = context.entityModelSet();
 			PlayerModel model = new PlayerModel(entityModelSet.bakeLayer(ModelLayers.PLAYER), false);
 			PlayerModel slimModel = new PlayerModel(entityModelSet.bakeLayer(ModelLayers.PLAYER_SLIM), true);

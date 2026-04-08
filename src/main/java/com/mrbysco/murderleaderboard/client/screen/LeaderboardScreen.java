@@ -4,7 +4,7 @@ import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -104,26 +104,20 @@ public class LeaderboardScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+	public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 
-		this.leaderboardWidget.render(guiGraphics, mouseX, mouseY, partialTicks);
+		this.leaderboardWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 
-		guiGraphics.drawCenteredString(font, murdererText, this.width / 2 - 56,
+		guiGraphics.centeredText(font, murdererText, this.width / 2 - 56,
 				16, 0xFFFFFF);
-		guiGraphics.drawCenteredString(font, killCountText, this.width / 2 + 100,
+		guiGraphics.centeredText(font, killCountText, this.width / 2 + 100,
 				16, 0xFFFFFF);
 
-		guiGraphics.drawCenteredString(font, Component.translatable("murderleaderboard.leaderboard.search"), this.width / 2 + PADDING,
+		guiGraphics.centeredText(font, Component.translatable("murderleaderboard.leaderboard.search"), this.width / 2 + PADDING,
 				search.getY() - getFontRenderer().lineHeight - 2, 0xFFFFFF);
 
-		this.search.render(guiGraphics, mouseX, mouseY, partialTicks);
-	}
-
-	@Override
-	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
-//		super.renderDirtBackground(guiGraphics);
+		this.search.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 	}
 
 	public Font getFontRenderer() {

@@ -4,7 +4,7 @@ import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class MurderLanguage extends LanguageProvider {
 	public MurderLanguage(PackOutput packOutput) {

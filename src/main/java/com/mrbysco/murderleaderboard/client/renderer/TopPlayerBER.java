@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -61,6 +61,10 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity, T
 	                               float partialTick, Vec3 cameraPosition,
 	                               @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+
+		BlockState state = blockEntity.getBlockState();
+		renderState.direction = state.getBlock() instanceof TopPlayerBlock ? state.getValue(TopPlayerBlock.FACING) : Direction.UP;
+
 		renderState.profile = blockEntity.getKiller();
 
 		if (renderState.profile != null) {
@@ -75,9 +79,7 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity, T
 
 	@Override
 	public void submit(TopPlayerRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-		BlockState blockstate = renderState.blockState;
-		boolean flag = blockstate.getBlock() instanceof TopPlayerBlock;
-		Direction direction = flag ? blockstate.getValue(TopPlayerBlock.FACING) : Direction.UP;
+		Direction direction = renderState.direction;
 		ResolvableProfile resolvableProfile = renderState.profile;
 		final RenderType renderType = renderState.renderType;
 		final PlayerModel playerModel = renderState.isSlim ? slimModel : model;
@@ -104,20 +106,6 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity, T
 
 				nodeCollector.submitText(poseStack, 0, 0 + yOffset, name.getVisualOrderText(), false,
 						Font.DisplayMode.NORMAL, renderState.lightCoords, 0, j, -1);
-//				poseStack.pushPose();
-//				poseStack.translate(0.0D, (double) yOffset, 0.0D);
-//				if (this.entityRenderDispatcher.camera != null)
-//					poseStack.mulPose(this.entityRenderDispatcher.camera.rotation());
-//				poseStack.scale(-0.025F, -0.025F, 0.025F);
-//				Matrix4f pose = poseStack.last().pose();
-//
-//
-//				Font font = minecraft.font;
-//				float halfWidth = (float) (-font.width(name) / 2);
-//				font.drawInBatch(name, halfWidth, (float) 0, 553648127, false, pose, bufferSource, flag ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, j, packedLight);
-//				font.drawInBatch(name, halfWidth, (float) 0, -1, false, pose, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
-//
-//				poseStack.popPose();
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,7 +15,7 @@ import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class MurderData extends SavedData {
+	private static final Identifier DATA_NAME = MurderLeaderboard.modLoc("murder_data");
+
 	public static final Map<String, Map<String, Integer>> userKillMap = new HashMap<>();
 	public static final Codec<MurderData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.unboundedMap(Codec.STRING,
@@ -37,7 +40,6 @@ public class MurderData extends SavedData {
 					.fieldOf("KillMap").forGetter(MurderData::getKillMap)
 	).apply(instance, MurderData::new));
 
-	private static final String DATA_NAME = MurderLeaderboard.MOD_ID + "_data";
 
 	public MurderData(Map<String, Map<String, Integer>> map) {
 		MurderData.userKillMap.clear();
@@ -141,7 +143,7 @@ public class MurderData extends SavedData {
 		}
 		ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
 
-		DimensionDataStorage storage = overworld.getDataStorage();
+		SavedDataStorage storage = overworld.getDataStorage();
 		return storage.computeIfAbsent(type());
 	}
 

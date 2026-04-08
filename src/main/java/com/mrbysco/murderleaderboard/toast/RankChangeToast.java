@@ -3,7 +3,7 @@ package com.mrbysco.murderleaderboard.toast;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -59,15 +59,15 @@ public class RankChangeToast implements Toast {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, Font font, long visibilityTime) {
+	public void extractRenderState(GuiGraphicsExtractor guiGraphics, Font font, long visibilityTime) {
 		guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
-		guiGraphics.drawString(font, title, 30, 7, -11534256, false);
-		guiGraphics.drawString(font, subtitle, 30, 18, -16777216, false);
+		guiGraphics.text(font, title, 30, 7, -11534256, false);
+		guiGraphics.text(font, subtitle, 30, 18, -16777216, false);
 		Matrix4fStack viewStack = RenderSystem.getModelViewStack();
 		viewStack.pushMatrix();
 		viewStack.translate(2.5F, 5F, 0F);
 		viewStack.scale(1.0F, 1.0F, 1.0F);
-		guiGraphics.renderFakeItem(skull, 3, 3);
+		guiGraphics.fakeItem(skull, 3, 3);
 		viewStack.popMatrix();
 	}
 }

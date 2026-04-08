@@ -4,7 +4,7 @@ import com.mrbysco.murderleaderboard.client.screen.widget.NumberFieldBox;
 import com.mrbysco.murderleaderboard.network.message.ChooseRankPayload;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -51,16 +51,16 @@ public class ChooseRankScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+	public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 
-		this.rankField.render(guiGraphics, mouseX, mouseY, partialTicks);
+		this.rankField.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 
 		int centerWidth = (this.width) / 2;
 		int centerHeight = (this.height) / 2;
 		String title = "Choose Rank";
 
-		guiGraphics.drawString(font, title, centerWidth - (this.font.width(title) / 2), centerHeight - 70, 16777215, false);
+		guiGraphics.text(font, title, centerWidth - (this.font.width(title) / 2), centerHeight - 70, 16777215, false);
 	}
 
 	@Override
