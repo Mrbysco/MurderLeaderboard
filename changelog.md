@@ -1,1 +1,1 @@
-* Fix potential server crash
+* Fix Top Player not updating skin when changing the rank
