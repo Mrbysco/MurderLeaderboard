@@ -22,7 +22,7 @@ public class ServerPayloadHandler {
 						if (serverLevel.getBlockEntity(data.pos()) instanceof TopPlayerBlockEntity topPlayerBlockEntity) {
 							topPlayerBlockEntity.setRank(data.rank());
 							topPlayerBlockEntity.updateTierProfile();
-							topPlayerBlockEntity.setChanged();
+							topPlayerBlockEntity.refreshClient();
 						}
 					}
 				})

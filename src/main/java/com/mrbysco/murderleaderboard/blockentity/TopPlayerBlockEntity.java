@@ -48,7 +48,10 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 		}
 
 		if (compound.contains("profile", 10)) {
-			ResolvableProfile.CODEC.parse(NbtOps.INSTANCE, compound.get("profile")).resultOrPartial(p_332637_ -> MurderLeaderboard.LOGGER.error("Failed to load profile from Top Player: {}", p_332637_)).ifPresent(this::setKiller);
+			ResolvableProfile.CODEC
+					.parse(NbtOps.INSTANCE, compound.get("profile"))
+					.resultOrPartial(error -> MurderLeaderboard.LOGGER.error("Failed to load profile from Top Player: {}", error))
+					.ifPresent(this::setKiller);
 		}
 
 		if (compound.contains("custom_name", 8)) {
@@ -136,7 +139,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 		}
 	}
 
-	private void refreshClient() {
+	public void refreshClient() {
 		this.setChanged();
 		BlockState state = level.getBlockState(worldPosition);
 		level.sendBlockUpdated(worldPosition, state, state, 2);
@@ -201,16 +204,16 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 	}
 
 	@Override
-	protected void applyImplicitComponents(BlockEntity.DataComponentInput pComponentInput) {
-		super.applyImplicitComponents(pComponentInput);
-		this.setKiller(pComponentInput.get(DataComponents.PROFILE));
-		this.customName = pComponentInput.get(DataComponents.CUSTOM_NAME);
+	protected void applyImplicitComponents(BlockEntity.DataComponentInput input) {
+		super.applyImplicitComponents(input);
+		this.setKiller(input.get(DataComponents.PROFILE));
+		this.customName = input.get(DataComponents.CUSTOM_NAME);
 	}
 
 	@Override
-	protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
-		super.collectImplicitComponents(pComponents);
-		pComponents.set(DataComponents.PROFILE, this.killer);
-		pComponents.set(DataComponents.CUSTOM_NAME, this.customName);
+	protected void collectImplicitComponents(DataComponentMap.Builder builder) {
+		super.collectImplicitComponents(builder);
+		builder.set(DataComponents.PROFILE, this.killer);
+		builder.set(DataComponents.CUSTOM_NAME, this.customName);
 	}
 }

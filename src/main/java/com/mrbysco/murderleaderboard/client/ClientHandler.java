@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -22,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientHandler {
-	public static final ModelLayerLocation TOP_PLAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "top_player"), "main");
-	public static final ModelLayerLocation TOP_PLAYER_SLIM = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(MurderLeaderboard.MOD_ID, "top_player_slim"), "main");
+	public static final ModelLayerLocation TOP_PLAYER = new ModelLayerLocation(MurderLeaderboard.modLoc("top_player"), "main");
+	public static final ModelLayerLocation TOP_PLAYER_SLIM = new ModelLayerLocation(MurderLeaderboard.modLoc("top_player_slim"), "main");
 	public static final List<MurderData.KillData> killList = new ArrayList<>();
 
 	public static final KeyMapping KEY_OPEN_LEADERBOARD = new KeyMapping(

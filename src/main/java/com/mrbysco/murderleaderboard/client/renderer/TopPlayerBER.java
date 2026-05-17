@@ -51,7 +51,6 @@ public class TopPlayerBER implements BlockEntityRenderer<TopPlayerBlockEntity> {
 		ResolvableProfile resolvableProfile = blockEntity.getKiller();
 
 		if (resolvableProfile != null) {
-			System.out.println(resolvableProfile);
 			SkinManager skinmanager = Minecraft.getInstance().getSkinManager();
 			if (isSlim != skinmanager.getInsecureSkin(resolvableProfile.gameProfile()).model().id().equals("slim"))
 				isSlim = !isSlim;
