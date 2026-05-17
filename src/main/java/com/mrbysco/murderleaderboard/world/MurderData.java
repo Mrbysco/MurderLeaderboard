@@ -3,6 +3,7 @@ package com.mrbysco.murderleaderboard.world;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
+import com.mrbysco.murderleaderboard.util.UsernameUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -186,7 +187,7 @@ public class MurderData extends SavedData {
 		public ItemStack getSkull() {
 			if (skull == ItemStack.EMPTY) {
 				ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
-				skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(name), Optional.empty(), new PropertyMap()));
+				skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(UsernameUtil.getSafeUsername(name)), Optional.empty(), new PropertyMap()));
 				this.skull = skullStack;
 			}
 			return skull;

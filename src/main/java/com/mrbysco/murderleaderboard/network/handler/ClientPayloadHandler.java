@@ -3,6 +3,7 @@ package com.mrbysco.murderleaderboard.network.handler;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.client.ClientHandler;
 import com.mrbysco.murderleaderboard.network.message.SyncKillsMessage;
+import com.mrbysco.murderleaderboard.util.UsernameUtil;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -80,7 +81,7 @@ public class ClientPayloadHandler {
 									if (oldRank != -1 && newRank != -1 && oldRank != newRank && newRank < 10) {
 										ItemStack skullStack = Items.PLAYER_HEAD.getDefaultInstance();
 
-										skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(killer), Optional.empty(), new PropertyMap()));
+										skullStack.set(DataComponents.PROFILE, new ResolvableProfile(Optional.of(UsernameUtil.getSafeUsername(killer)), Optional.empty(), new PropertyMap()));
 										ClientHandler.setToast(newRank, killCache.get(newRank).name(), killer, skullStack);
 									}
 								}

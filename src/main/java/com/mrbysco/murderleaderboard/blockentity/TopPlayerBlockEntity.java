@@ -3,6 +3,7 @@ package com.mrbysco.murderleaderboard.blockentity;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mrbysco.murderleaderboard.MurderLeaderboard;
 import com.mrbysco.murderleaderboard.registry.MurderRegistry;
+import com.mrbysco.murderleaderboard.util.UsernameUtil;
 import com.mrbysco.murderleaderboard.world.MurderData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -197,7 +198,7 @@ public class TopPlayerBlockEntity extends BlockEntity implements Nameable {
 				} else {
 					String killer = killList.get((getRank() - 1)).name().toLowerCase(Locale.ROOT);
 					if (currentProfile == null || !currentProfile.name().get().equalsIgnoreCase(killer))
-						this.setKiller(new ResolvableProfile(Optional.of(killer), Optional.empty(), new PropertyMap()));
+						this.setKiller(new ResolvableProfile(Optional.of(UsernameUtil.getSafeUsername(killer)), Optional.empty(), new PropertyMap()));
 				}
 			}
 		}
