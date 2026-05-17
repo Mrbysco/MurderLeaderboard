@@ -1,1 +1,1 @@
-* Fix Top Player not updating skin when changing the rank
+* Add some safety around rendering in case of invalid usernames
