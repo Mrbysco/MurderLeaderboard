@@ -16,9 +16,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 	private final TopPlayerTileModel model;
 	private final TopPlayerTileModel slimModel;
@@ -34,8 +31,6 @@ public class TopPlayerBEWLR extends BlockEntityWithoutLevelRenderer {
 	public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
 		renderPlayerItem(stack, poseStack, bufferSource, combinedLight);
 	}
-
-	private static final Map<String, ResolvableProfile> GAMEPROFILE_CACHE = new HashMap<>();
 
 	public void renderPlayerItem(ItemStack stack, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight) {
 		poseStack.pushPose();
